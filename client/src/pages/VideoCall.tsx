@@ -1,15 +1,15 @@
 // src/pages/VideoCall.tsx - Fixed version with persistent display
-import { useEffect, useRef, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { PhoneOff, Monitor, MonitorOff, Mic, MicOff, Video, VideoOff } from 'lucide-react';
-import { useVideoCallStore } from '../store/videoCallStore';
-import { useAuthStore } from '../store/authStore';
+import { useEffect, useRef, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { PhoneOff, Monitor, MonitorOff, Mic, MicOff, Video, VideoOff } from "lucide-react";
+import { useVideoCallStore } from "../store/videoCallStore";
+import { useAuthStore } from "../store/authStore";
 
 const VideoCall = () => {
   const { roomId } = useParams<{ roomId: string }>();
   const navigate = useNavigate();
   const { user } = useAuthStore();
-  
+
   const {
     currentCall,
     localStream,
@@ -18,32 +18,32 @@ const VideoCall = () => {
     endCall,
     startScreenShare,
     stopScreenShare,
-    isConnected
+    isConnected,
   } = useVideoCallStore();
 
   const localVideoRef = useRef<HTMLVideoElement>(null);
   const remoteVideoRef = useRef<HTMLVideoElement>(null);
-  
+
   const [isMuted, setIsMuted] = useState(false);
   const [isVideoOff, setIsVideoOff] = useState(false);
-  const [callStatus, setCallStatus] = useState<'connecting' | 'connected' | 'ended'>('connecting');
+  const [callStatus, setCallStatus] = useState<"connecting" | "connected" | "ended">("connecting");
   const [pageReady, setPageReady] = useState(false);
-  const [peerName, setPeerName] = useState<string>('');
+  const [peerName, setPeerName] = useState<string>("");
 
-  console.log('🎥 Video call page loaded for room:', roomId);
-  console.log('📹 Current call state:', currentCall);
-  console.log('📡 Local stream:', !!localStream);
-  console.log('📡 Remote stream:', !!remoteStream);
-  console.log('🔌 Socket connected:', isConnected);
-  console.log('👤 User:', user?._id);
+  console.log("🎥 Video call page loaded for room:", roomId);
+  console.log("📹 Current call state:", currentCall);
+  console.log("📡 Local stream:", !!localStream);
+  console.log("📡 Remote stream:", !!remoteStream);
+  console.log("🔌 Socket connected:", isConnected);
+  console.log("👤 User:", user?._id);
 
   // Initialize page and prevent premature navigation
   useEffect(() => {
-    console.log('🚀 Video call page initializing...');
-    
+    console.log("🚀 Video call page initializing...");
+
     if (!roomId) {
-      console.log('❌ No room ID provided');
-      navigate('/chat');
+      console.log("❌ No room ID provided");
+      navigate("/chat");
       return;
     }
 
@@ -56,30 +56,30 @@ const VideoCall = () => {
     // Extract peer name from room ID or current call
     if (currentCall) {
       setPeerName(currentCall.peerName);
-      console.log('✅ Found peer name from current call:', currentCall.peerName);
+      console.log("✅ Found peer name from current call:", currentCall.peerName);
     } else {
       // Try to extract from roomId (format: userId1-userId2)
-      const parts = roomId.split('-');
+      const parts = roomId.split("-");
       if (parts.length === 2) {
         const otherUserId = parts[0] === user?._id ? parts[1] : parts[0];
         setPeerName(`User ${otherUserId.slice(-4)}`); // Show last 4 chars of ID
-        console.log('📝 Generated peer name from room ID:', `User ${otherUserId.slice(-4)}`);
+        console.log("📝 Generated peer name from room ID:", `User ${otherUserId.slice(-4)}`);
       }
     }
 
     setPageReady(true);
-    console.log('✅ Video call page ready');
+    console.log("✅ Video call page ready");
   }, [roomId, user, currentCall, navigate]);
 
   // Set up local video stream
   useEffect(() => {
     if (localStream && localVideoRef.current) {
-      console.log('📹 Setting up local video stream');
+      console.log("📹 Setting up local video stream");
       localVideoRef.current.srcObject = localStream;
-      
-      if (callStatus === 'connecting') {
-        setCallStatus('connected');
-        console.log('📞 Call status updated to connected');
+
+      if (callStatus === "connecting") {
+        setCallStatus("connected");
+        console.log("📞 Call status updated to connected");
       }
     }
   }, [localStream, callStatus]);
@@ -87,7 +87,7 @@ const VideoCall = () => {
   // Set up remote video stream
   useEffect(() => {
     if (remoteStream && remoteVideoRef.current) {
-      console.log('📹 Setting up remote video stream');
+      console.log("📹 Setting up remote video stream");
       remoteVideoRef.current.srcObject = remoteStream;
     }
   }, [remoteStream]);
@@ -96,11 +96,11 @@ const VideoCall = () => {
   useEffect(() => {
     // Listen for call ended and cleanup, but don't navigate immediately
     const handleCallEnded = () => {
-      console.log('☎️ Call ended event received');
-      setCallStatus('ended');
+      console.log("☎️ Call ended event received");
+      setCallStatus("ended");
       // Wait a bit before navigating to show end call message
       setTimeout(() => {
-        navigate('/chat');
+        navigate("/chat");
       }, 2000);
     };
 
@@ -108,24 +108,24 @@ const VideoCall = () => {
     // This depends on how your store handles call end events
 
     return () => {
-      console.log('🧹 Video call page cleanup');
+      console.log("🧹 Video call page cleanup");
     };
   }, [navigate]);
 
   const handleEndCall = () => {
-    console.log('☎️ User clicked end call');
-    setCallStatus('ended');
+    console.log("☎️ User clicked end call");
+    setCallStatus("ended");
     endCall();
-    
+
     // Navigate after a short delay to show the end call state
     setTimeout(() => {
-      navigate('/chat');
+      navigate("/chat");
     }, 1000);
   };
 
   const handleScreenShare = async () => {
-    console.log('🖥️ User clicked screen share:', isScreenSharing);
-    
+    console.log("🖥️ User clicked screen share:", isScreenSharing);
+
     if (isScreenSharing) {
       stopScreenShare();
     } else {
@@ -134,10 +134,10 @@ const VideoCall = () => {
   };
 
   const toggleMute = () => {
-    console.log('🎤 Toggling mute:', !isMuted);
-    
+    console.log("🎤 Toggling mute:", !isMuted);
+
     if (localStream) {
-      localStream.getAudioTracks().forEach(track => {
+      localStream.getAudioTracks().forEach((track) => {
         track.enabled = isMuted;
       });
       setIsMuted(!isMuted);
@@ -145,10 +145,10 @@ const VideoCall = () => {
   };
 
   const toggleVideo = () => {
-    console.log('📹 Toggling video:', !isVideoOff);
-    
+    console.log("📹 Toggling video:", !isVideoOff);
+
     if (localStream) {
-      localStream.getVideoTracks().forEach(track => {
+      localStream.getVideoTracks().forEach((track) => {
         track.enabled = isVideoOff;
       });
       setIsVideoOff(!isVideoOff);
@@ -157,7 +157,7 @@ const VideoCall = () => {
 
   // Show loading while page initializes
   if (!pageReady) {
-    console.log('⏳ Page not ready yet, showing loading...');
+    console.log("⏳ Page not ready yet, showing loading...");
     return (
       <div className="min-h-screen bg-gray-900 flex items-center justify-center">
         <div className="text-white text-xl">Initializing video call...</div>
@@ -166,7 +166,7 @@ const VideoCall = () => {
   }
 
   // Show call ended state
-  if (callStatus === 'ended') {
+  if (callStatus === "ended") {
     return (
       <div className="min-h-screen bg-gray-900 flex items-center justify-center">
         <div className="text-center text-white">
@@ -179,21 +179,23 @@ const VideoCall = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-900 relative overflow-hidden">
+    <div className="min-h-screen bg-gray-900 relative overflow-hidden max-w-7xl mx-auto">
       {/* Header */}
-      <div className="absolute top-0 left-0 right-0 z-10 bg-black bg-opacity-50 backdrop-blur-sm">
+      <div className="absolute top-0 left-0 right-0 z-10 bg-[#134848] bg-opacity-50 backdrop-blur-sm">
         <div className="flex items-center justify-between p-4">
           <div className="text-white">
             <h2 className="text-lg font-semibold">Video Call</h2>
             <p className="text-sm text-gray-300">
-              {callStatus === 'connecting' ? 'Connecting...' : `with ${peerName || 'Unknown'}`}
+              {callStatus === "connecting" ? "Connecting..." : `with ${peerName || "Unknown"}`}
             </p>
           </div>
-          
+
           <div className="flex items-center space-x-2">
-            <div className={`w-3 h-3 rounded-full ${
-              callStatus === 'connected' ? 'bg-green-500' : 'bg-yellow-500'
-            }`}></div>
+            <div
+              className={`w-3 h-3 rounded-full ${
+                callStatus === "connected" ? "bg-green-500" : "bg-[#2E90EB]"
+              }`}
+            ></div>
             <span className="text-sm text-white capitalize">{callStatus}</span>
           </div>
         </div>
@@ -202,7 +204,7 @@ const VideoCall = () => {
       {/* Video Container */}
       <div className="flex h-screen">
         {/* Remote Video (Main) */}
-        <div className="flex-1 relative bg-gray-800">
+        <div className="flex-1 relative bg-white">
           {remoteStream ? (
             <video
               ref={remoteVideoRef}
@@ -214,13 +216,15 @@ const VideoCall = () => {
             <div className="w-full h-full flex items-center justify-center">
               <div className="text-center text-white">
                 <div className="w-32 h-32 bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-4xl font-bold">
-                    {peerName ? peerName.charAt(0).toUpperCase() : '?'}
+                  <span className="text-4xl font-bold text-white">
+                    {peerName ? peerName.charAt(0).toUpperCase() : "?"}
                   </span>
                 </div>
-                <p className="text-xl font-semibold mb-2">{peerName || 'Unknown User'}</p>
-                <p className="text-gray-400">
-                  {callStatus === 'connecting' ? 'Connecting...' : 'Camera is off'}
+                <p className="text-xl font-semibold mb-2 text-[#134848]">
+                  {peerName || "Unknown User"}
+                </p>
+                <p className="text-[#2E90EB]">
+                  {callStatus === "connecting" ? "Connecting..." : "Camera is off"}
                 </p>
               </div>
             </div>
@@ -246,7 +250,7 @@ const VideoCall = () => {
                 <VideoOff className="w-8 h-8 text-gray-400" />
               </div>
             )}
-            
+
             {/* You label */}
             <div className="absolute bottom-1 left-1 bg-black bg-opacity-50 text-white text-xs px-2 py-1 rounded">
               You
@@ -256,17 +260,15 @@ const VideoCall = () => {
       </div>
 
       {/* Control Bar */}
-      <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-75 backdrop-blur-sm">
+      <div className="absolute bottom-0 left-0 right-0 bg-[#134848] ity-75 backdrop-blur-sm">
         <div className="flex items-center justify-center space-x-6 p-6">
           {/* Mute Button */}
           <button
             onClick={toggleMute}
             className={`w-14 h-14 rounded-full flex items-center justify-center transition-all duration-200 ${
-              isMuted 
-                ? 'bg-red-500 hover:bg-red-600' 
-                : 'bg-gray-600 hover:bg-gray-700'
+              isMuted ? "bg-red-500 hover:bg-red-600" : "bg-gray-600 hover:bg-gray-700"
             }`}
-            title={isMuted ? 'Unmute' : 'Mute'}
+            title={isMuted ? "Unmute" : "Mute"}
           >
             {isMuted ? (
               <MicOff className="w-6 h-6 text-white" />
@@ -279,11 +281,9 @@ const VideoCall = () => {
           <button
             onClick={toggleVideo}
             className={`w-14 h-14 rounded-full flex items-center justify-center transition-all duration-200 ${
-              isVideoOff 
-                ? 'bg-red-500 hover:bg-red-600' 
-                : 'bg-gray-600 hover:bg-gray-700'
+              isVideoOff ? "bg-red-500 hover:bg-red-600" : "bg-gray-600 hover:bg-gray-700"
             }`}
-            title={isVideoOff ? 'Turn camera on' : 'Turn camera off'}
+            title={isVideoOff ? "Turn camera on" : "Turn camera off"}
           >
             {isVideoOff ? (
               <VideoOff className="w-6 h-6 text-white" />
@@ -296,11 +296,9 @@ const VideoCall = () => {
           <button
             onClick={handleScreenShare}
             className={`w-14 h-14 rounded-full flex items-center justify-center transition-all duration-200 ${
-              isScreenSharing 
-                ? 'bg-blue-500 hover:bg-blue-600' 
-                : 'bg-gray-600 hover:bg-gray-700'
+              isScreenSharing ? "bg-blue-500 hover:bg-blue-600" : "bg-gray-600 hover:bg-gray-700"
             }`}
-            title={isScreenSharing ? 'Stop sharing' : 'Share screen'}
+            title={isScreenSharing ? "Stop sharing" : "Share screen"}
           >
             {isScreenSharing ? (
               <MonitorOff className="w-6 h-6 text-white" />
@@ -343,10 +341,10 @@ const VideoCall = () => {
       {/* Debug Info (remove in production) */}
       <div className="absolute top-4 left-4 bg-black bg-opacity-50 text-white text-xs p-2 rounded">
         <div>Room: {roomId}</div>
-        <div>Connected: {isConnected ? 'Yes' : 'No'}</div>
-        <div>Local Stream: {localStream ? 'Yes' : 'No'}</div>
-        <div>Remote Stream: {remoteStream ? 'Yes' : 'No'}</div>
-        <div>Current Call: {currentCall ? 'Yes' : 'No'}</div>
+        <div>Connected: {isConnected ? "Yes" : "No"}</div>
+        <div>Local Stream: {localStream ? "Yes" : "No"}</div>
+        <div>Remote Stream: {remoteStream ? "Yes" : "No"}</div>
+        <div>Current Call: {currentCall ? "Yes" : "No"}</div>
         <div>Status: {callStatus}</div>
       </div>
     </div>

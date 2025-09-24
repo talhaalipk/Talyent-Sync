@@ -67,7 +67,7 @@ interface VideoCallStore {
 const ICE_SERVERS = {
     iceServers: [
         { urls: 'stun:stun.l.google.com:19302' },
-        { urls: 'stun:stun1.l.google.com:19302' },
+        { urls: 'stun:global.stun.twilio.com:3478' },
     ],
 };
 
@@ -380,15 +380,18 @@ export const useVideoCallStore = create<VideoCallStore>((set, get) => ({
 
     handleWebRTCOffer: async (data: any) => {
         console.log('📨 Received WebRTC offer');
+        console.log('📨 data' ,data);
 
         const { peerConnection, socket, currentCall } = get();
 
-        if (peerConnection && socket && currentCall) {
+        console.log(peerConnection, socket, currentCall)
+        // if (peerConnection && socket && currentCall) {
+        if ( socket ) {
             try {
                 await peerConnection.setRemoteDescription(data.offer);
                 const answer = await peerConnection.createAnswer();
                 await peerConnection.setLocalDescription(answer);
-
+                console.log("Answer Created : ", answer)
                 socket.emit('webrtc-answer', {
                     answer: answer,
                     targetUserId: data.fromUserId,

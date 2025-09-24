@@ -1,6 +1,7 @@
 // src/components/videocall/IncomingCallModal.tsx
 import { Phone, PhoneOff, User } from 'lucide-react';
 import { useVideoCallStore } from '../../store/videoCallStore';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const IncomingCallModal = () => {
   const { incomingCall, acceptCall, rejectCall } = useVideoCallStore();
@@ -20,59 +21,56 @@ const IncomingCallModal = () => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75">
-      <div className="bg-white rounded-2xl p-8 max-w-sm w-full mx-4 shadow-2xl animate-pulse">
-        {/* Caller Info */}
-        <div className="text-center mb-8">
-          <div className="relative inline-block mb-4">
+    <AnimatePresence>
+      {incomingCall && (
+        <motion.div
+          initial={{ x: '100%', opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          exit={{ x: '100%', opacity: 0 }}
+          transition={{ duration: 0.4, ease: 'easeOut' }}
+          className="fixed top-6 right-6 z-50 w-full max-w-md"
+        >
+          <div className="bg-white rounded-xl shadow-lg border border-gray-200 flex items-center p-4">
+            {/* Avatar */}
             {incomingCall.callerProfilePic ? (
               <img
                 src={incomingCall.callerProfilePic}
                 alt={incomingCall.callerName}
-                className="w-24 h-24 rounded-full object-cover border-4 border-blue-500 animate-pulse"
+                className="w-14 h-14 rounded-full object-cover border-2 border-[#2E90EB]"
               />
             ) : (
-              <div className="w-24 h-24 rounded-full bg-[#134848] flex items-center justify-center border-4 border-blue-500 animate-pulse">
-                <User className="w-10 h-10 text-white" />
+              <div className="w-14 h-14 rounded-full bg-[#134848] flex items-center justify-center border-2 border-[#2E90EB]">
+                <User className="w-7 h-7 text-white" />
               </div>
             )}
-            {/* Pulsing ring effect */}
-            <div className="absolute inset-0 w-24 h-24 rounded-full border-4 border-blue-400 animate-ping"></div>
+
+            {/* Caller Info */}
+            <div className="flex-1 ml-4">
+              <h3 className="text-base font-semibold text-gray-900">
+                {incomingCall.callerName}
+              </h3>
+              <p className="text-sm text-gray-500">is calling you…</p>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex items-center space-x-3">
+              <button
+                onClick={handleReject}
+                className="flex items-center justify-center w-10 h-10 rounded-full bg-red-500 hover:bg-red-600 transition-transform transform hover:scale-110 shadow-md"
+              >
+                <PhoneOff className="w-5 h-5 text-white" />
+              </button>
+              <button
+                onClick={handleAccept}
+                className="flex items-center justify-center w-10 h-10 rounded-full bg-green-500 hover:bg-green-600 transition-transform transform hover:scale-110 shadow-md animate-bounce"
+              >
+                <Phone className="w-5 h-5 text-white" />
+              </button>
+            </div>
           </div>
-
-          <h3 className="text-2xl font-bold text-gray-800 mb-2">
-            {incomingCall.callerName}
-          </h3>
-          <p className="text-gray-600 text-lg">is calling you...</p>
-        </div>
-
-        {/* Action Buttons */}
-        <div className="flex justify-center space-x-8">
-          {/* Reject Button */}
-          <button
-            onClick={handleReject}
-            className="w-16 h-16 bg-red-500 hover:bg-red-600 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110 shadow-lg"
-          >
-            <PhoneOff className="w-8 h-8 text-white" />
-          </button>
-
-          {/* Accept Button */}
-          <button
-            onClick={handleAccept}
-            className="w-16 h-16 bg-green-500 hover:bg-green-600 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110 shadow-lg animate-bounce"
-          >
-            <Phone className="w-8 h-8 text-white" />
-          </button>
-        </div>
-
-        {/* Call info */}
-        <div className="text-center mt-6">
-          <p className="text-sm text-gray-500">
-            Tap to accept or decline the video call
-          </p>
-        </div>
-      </div>
-    </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 };
 

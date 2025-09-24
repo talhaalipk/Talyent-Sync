@@ -40,11 +40,15 @@ function Layout({ children }: { children: React.ReactNode }) {
   // Check if current route is an admin route
   const isAdminRoute = location.pathname.startsWith("/admin");
 
+  // Check if current route is a video call route
+  const isVideoCallRoute = location.pathname.startsWith("/videocall");
+
   return (
     <>
       {!isAdminRoute && <Header />}
       {children}
-      {!isAdminRoute && <Footer />}
+      {/* Hide Footer on admin and video call pages */}
+      {!isAdminRoute && !isVideoCallRoute && <Footer />}
     </>
   );
 }
@@ -52,7 +56,9 @@ function Layout({ children }: { children: React.ReactNode }) {
 function App() {
   const { user } = useAuthStore();
   const { initialize, cleanup } = useNotificationInit();
-
+  console.log("App Redered, user");
+  console.log("App Redered, user");
+  
   useEffect(() => {
     if (user) {
       // Initialize notifications when user is logged in
