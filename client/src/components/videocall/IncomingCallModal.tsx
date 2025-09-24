@@ -2,9 +2,11 @@
 import { Phone, PhoneOff, User } from 'lucide-react';
 import { useVideoCallStore } from '../../store/videoCallStore';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 
 const IncomingCallModal = () => {
   const { incomingCall, acceptCall, rejectCall } = useVideoCallStore();
+  const navigate = useNavigate();
 
   console.log('🎯 Incoming call modal render:', incomingCall);
 
@@ -12,7 +14,10 @@ const IncomingCallModal = () => {
 
   const handleAccept = () => {
     console.log('✅ User accepted call');
-    acceptCall();
+    const roomId = acceptCall() as unknown as string | undefined;
+    if (roomId) {
+      navigate(`/videocall/${roomId}`);
+    }
   };
 
   const handleReject = () => {

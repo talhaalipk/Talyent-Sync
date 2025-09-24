@@ -10,7 +10,7 @@ interface VideoCallProviderProps {
 
 const VideoCallProvider = ({ children }: VideoCallProviderProps) => {
   const { user } = useAuthStore();
-  const { connect, disconnect, isConnected } = useVideoCallStore();
+  const { connect, isConnected } = useVideoCallStore();
 
   console.log('🎥 Video call provider mounted, user:', user?._id);
 
@@ -21,20 +21,17 @@ const VideoCallProvider = ({ children }: VideoCallProviderProps) => {
     }
 
     return () => {
-      if (isConnected) {
-        console.log('🔌 Disconnecting from video call service...');
-        disconnect();
-      }
+      // Unsubscribe socket listeners on unmount; keep connection lifecycle internal
+      console.log('🔌 Cleaning up video call provider effect');
     };
-  }, [user, connect, disconnect, isConnected]);
+  }, [user, connect, isConnected]);
 
   // Clean up on unmount
   useEffect(() => {
     return () => {
       console.log('🧹 Video call provider cleanup');
-      disconnect();
     };
-  }, [disconnect]);
+  }, []);
 
   return (
     <>

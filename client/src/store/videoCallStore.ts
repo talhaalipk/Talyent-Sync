@@ -40,12 +40,14 @@ interface VideoCallStore {
     remoteStream: MediaStream | null;
     isScreenSharing: boolean;
     screenStream: MediaStream | null;
+    isSettingUp: boolean;
+    lastSignalContext: { peerId: string; roomId: string } | null;
 
     // Actions
     connect: () => void;
     disconnect: () => void;
-    initiateCall: (targetUserId: string, targetUserName: string) => void;
-    acceptCall: () => void;
+    initiateCall: (targetUserId: string, targetUserName: string) => string | undefined;
+    acceptCall: () => string | undefined;
     rejectCall: () => void;
     endCall: () => void;
     startScreenShare: () => Promise<void>;
@@ -82,6 +84,8 @@ export const useVideoCallStore = create<VideoCallStore>((set, get) => ({
     remoteStream: null,
     isScreenSharing: false,
     screenStream: null,
+    isSettingUp: false,
+    lastSignalContext: null,
 
     connect: () => {
         console.log('🔌 Connecting to video call socket...');
@@ -120,6 +124,15 @@ export const useVideoCallStore = create<VideoCallStore>((set, get) => ({
 
         socket.on('call-accepted', (data: any) => {
             console.log('✅ Call accepted, starting WebRTC...');
+            // For the caller, set currentCall so ICE and UI work correctly
+            set({
+                currentCall: {
+                    roomId: data.roomId,
+                    peerId: data.receiverId,
+                    peerName: data.receiverName,
+                    isActive: true
+                }
+            });
             get().setupWebRTC(data);
         });
 
@@ -187,9 +200,9 @@ export const useVideoCallStore = create<VideoCallStore>((set, get) => ({
         const roomId = `${user._id}-${targetUserId}`;
 
         socket.emit('initiate-call', { targetUserId, roomId });
-
-        // Navigate to video call page
-        window.location.href = `/videocall/${roomId}`;
+        
+        // Return roomId so caller component can navigate without full reload
+        return roomId;
     },
 
     acceptCall: () => {
@@ -203,9 +216,9 @@ export const useVideoCallStore = create<VideoCallStore>((set, get) => ({
             callerId: incomingCall.callerId,
             roomId: incomingCall.roomId
         });
-
-        // Navigate to video call page
-        window.location.href = `/videocall/${incomingCall.roomId}`;
+        
+        // Return roomId so receiver component can navigate without full reload
+        return incomingCall.roomId;
     },
 
     rejectCall: () => {
@@ -231,9 +244,7 @@ export const useVideoCallStore = create<VideoCallStore>((set, get) => ({
 
         socket.emit('end-call', { roomId: currentCall.roomId });
         get().cleanupCall();
-
-        // Navigate back to chat or dashboard
-        window.location.href = '/chat';
+        // Let the UI decide navigation to avoid hard reloads
     },
 
     startScreenShare: async () => {
@@ -314,24 +325,57 @@ export const useVideoCallStore = create<VideoCallStore>((set, get) => ({
     setupWebRTC: async (callData: any) => {
         console.log('🔄 Setting up WebRTC connection...');
 
-        try {
-            // Get user media
-            const localStream = await navigator.mediaDevices.getUserMedia({
-                video: true,
-                audio: true
-            });
+        if (get().isSettingUp) {
+            console.log('⏳ WebRTC setup already in progress, skipping duplicate call');
+            return;
+        }
 
-            console.log('✅ Local stream obtained');
-            set({ localStream });
+        set({ isSettingUp: true });
+
+        try {
+            // Reuse existing local stream if available
+            let existingLocalStream = get().localStream;
+            let hadLocalTracks = false;
+            if (!existingLocalStream) {
+                try {
+                    existingLocalStream = await navigator.mediaDevices.getUserMedia({
+                        video: { width: { ideal: 1280 }, height: { ideal: 720 }, frameRate: { ideal: 30 } },
+                        audio: { echoCancellation: true, noiseSuppression: true }
+                    });
+                    hadLocalTracks = true;
+                } catch (err: any) {
+                    if (err && err.name === 'NotReadableError') {
+                        console.warn('⚠️ NotReadableError on getUserMedia, proceeding without local tracks (recvonly)');
+                        // proceed without local stream; we'll still set up PC to receive remote
+                        existingLocalStream = null;
+                    } else {
+                        throw err;
+                    }
+                }
+                if (existingLocalStream) {
+                    console.log('✅ Local stream obtained');
+                    set({ localStream: existingLocalStream });
+                }
+            } else {
+                console.log('🔁 Reusing existing local stream');
+                hadLocalTracks = existingLocalStream.getTracks().length > 0;
+            }
 
             // Create peer connection
             const peerConnection = new RTCPeerConnection(ICE_SERVERS);
 
             // Add local stream to peer connection
-            localStream.getTracks().forEach(track => {
-                peerConnection.addTrack(track, localStream);
-                console.log(`📡 Added ${track.kind} track to peer connection`);
-            });
+            if (existingLocalStream && hadLocalTracks) {
+                existingLocalStream.getTracks().forEach(track => {
+                    peerConnection.addTrack(track, existingLocalStream as MediaStream);
+                    console.log(`📡 Added ${track.kind} track to peer connection`);
+                });
+            } else {
+                // No local tracks available: add recvonly transceivers to still receive remote
+                peerConnection.addTransceiver('video', { direction: 'recvonly' });
+                peerConnection.addTransceiver('audio', { direction: 'recvonly' });
+                console.log('🎧 Using recvonly transceivers (no local media)');
+            }
 
             // Handle remote stream
             peerConnection.ontrack = (event) => {
@@ -344,12 +388,14 @@ export const useVideoCallStore = create<VideoCallStore>((set, get) => ({
             peerConnection.onicecandidate = (event) => {
                 if (event.candidate) {
                     console.log('🧊 Sending ICE candidate');
-                    const { socket, currentCall } = get();
-                    if (socket && currentCall) {
+                    const { socket, currentCall, lastSignalContext } = get();
+                    const targetPeerId = currentCall?.peerId || lastSignalContext?.peerId;
+                    const roomId = currentCall?.roomId || lastSignalContext?.roomId;
+                    if (socket && targetPeerId && roomId) {
                         socket.emit('webrtc-ice-candidate', {
                             candidate: event.candidate,
-                            targetUserId: currentCall.peerId,
-                            roomId: currentCall.roomId
+                            targetUserId: targetPeerId,
+                            roomId: roomId
                         });
                     }
                 }
@@ -365,6 +411,8 @@ export const useVideoCallStore = create<VideoCallStore>((set, get) => ({
 
                 const { socket } = get();
                 if (socket) {
+                    // Save context for ICE before remote description is set
+                    set({ lastSignalContext: { peerId: callData.receiverId, roomId: callData.roomId } });
                     socket.emit('webrtc-offer', {
                         offer: offer,
                         targetUserId: callData.receiverId,
@@ -375,6 +423,8 @@ export const useVideoCallStore = create<VideoCallStore>((set, get) => ({
 
         } catch (error) {
             console.error('❌ Error setting up WebRTC:', error);
+        } finally {
+            set({ isSettingUp: false });
         }
     },
 
@@ -382,11 +432,31 @@ export const useVideoCallStore = create<VideoCallStore>((set, get) => ({
         console.log('📨 Received WebRTC offer');
         console.log('📨 data' ,data);
 
-        const { peerConnection, socket, currentCall } = get();
+        let { peerConnection, socket, currentCall } = get();
 
-        console.log(peerConnection, socket, currentCall)
-        // if (peerConnection && socket && currentCall) {
-        if ( socket ) {
+        console.log(peerConnection, socket)
+        if (!peerConnection) {
+            console.log('🧱 No peerConnection yet, initializing setup before answering');
+            await get().setupWebRTC({ roomId: data.roomId });
+            peerConnection = get().peerConnection;
+        }
+
+        // Ensure currentCall is available for downstream logic and UI
+        if (!currentCall) {
+            set({
+                currentCall: {
+                    roomId: data.roomId,
+                    peerId: data.fromUserId,
+                    peerName: 'Peer',
+                    isActive: true
+                },
+                lastSignalContext: { peerId: data.fromUserId, roomId: data.roomId }
+            });
+            currentCall = get().currentCall;
+        }
+
+        if (peerConnection && socket) {
+        // if ( socket ) {
             try {
                 await peerConnection.setRemoteDescription(data.offer);
                 const answer = await peerConnection.createAnswer();

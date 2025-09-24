@@ -1,6 +1,7 @@
 // src/components/videocall/VideoCallButton.tsx
 import { Video, VideoOff } from 'lucide-react';
 import { useVideoCallStore } from '../../store/videoCallStore';
+import { useNavigate } from 'react-router-dom';
 
 interface VideoCallButtonProps {
   targetUserId: string;
@@ -18,6 +19,7 @@ const VideoCallButton = ({
   variant = 'primary'
 }: VideoCallButtonProps) => {
   const { initiateCall, onlineUsers, isConnected } = useVideoCallStore();
+  const navigate = useNavigate();
 
   console.log('🎥 Video call button for:', targetUserName, targetUserId);
 
@@ -47,7 +49,10 @@ const VideoCallButton = ({
     }
 
     console.log('📞 Initiating video call to:', targetUserName);
-    initiateCall(targetUserId, targetUserName);
+    const roomId = initiateCall(targetUserId, targetUserName) as unknown as string | undefined;
+    if (roomId) {
+      navigate(`/videocall/${roomId}`);
+    }
   };
 
   const isDisabled = disabled || !isConnected || !isTargetOnline || isTargetOnCall;

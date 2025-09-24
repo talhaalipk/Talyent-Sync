@@ -260,7 +260,7 @@ const VideoCall = () => {
       </div>
 
       {/* Control Bar */}
-      <div className="absolute bottom-0 left-0 right-0 bg-[#134848] ity-75 backdrop-blur-sm">
+      <div className="absolute bottom-0 left-0 right-0 bg-transparent ity-75 backdrop-blur-sm">
         <div className="flex items-center justify-center space-x-6 p-6">
           {/* Mute Button */}
           <button
