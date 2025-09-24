@@ -54,7 +54,8 @@ function Layout({ children }: { children: React.ReactNode }) {
 }
 
 function App() {
-  const { user } = useAuthStore();
+  // Select only the user to avoid subscribing to the entire auth store
+  const user = useAuthStore((s) => s.user);
   const { initialize, cleanup } = useNotificationInit();
   console.log("App Redered, user");
   console.log("App Redered, user");
@@ -64,14 +65,12 @@ function App() {
       // Initialize notifications when user is logged in
       initialize();
     }
-    // Cleanup function will run when component unmounts or when user changes
+    // Always disconnect socket when user changes or component unmounts
     return () => {
-      if (!user) {
-        cleanup();
-      }
+      cleanup();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user]); // Depend on user, initialize, and cleanup
+  }, [user]); // Depend on user only; initialize/cleanup are memoized
 
   return (
     <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>

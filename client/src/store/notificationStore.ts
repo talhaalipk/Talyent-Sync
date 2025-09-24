@@ -304,8 +304,11 @@ export const useNotificationSender = () => {
 
 // Hook to initialize notifications (use in App.tsx)
 export const useNotificationInit = () => {
-  const { initializeSocket, disconnectSocket, fetchNotifications, getUnreadCount } =
-    useNotificationStore();
+  // Select only the actions to avoid subscribing to the entire store
+  const initializeSocket = useNotificationStore((s) => s.initializeSocket);
+  const disconnectSocket = useNotificationStore((s) => s.disconnectSocket);
+  const fetchNotifications = useNotificationStore((s) => s.fetchNotifications);
+  const getUnreadCount = useNotificationStore((s) => s.getUnreadCount);
 
   // Memoize the initialize function to prevent infinite re-renders
   const initialize = useCallback(async () => {
