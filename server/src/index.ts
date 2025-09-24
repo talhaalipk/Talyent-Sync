@@ -29,6 +29,7 @@ import adminDashboardRouter from './Routes/Admin/adminDashboard';
 import ChatSocketHandler from './sockets/chatSocket';
 import { initializeNotificationSocket } from './sockets/notificationSocket';
 import { notificationService } from './services/notificationService';
+import VideoCallSocketHandler from './sockets/videoCallSocket';
 
 //Model
 import './Models/user';
@@ -64,6 +65,7 @@ const io = new Server(server, {
 new ChatSocketHandler(io);
 notificationService.initialize(io);
 initializeNotificationSocket(io);
+new VideoCallSocketHandler(io);
 
 app.get('/test', (req, res) => {
   console.log('✅ Route hit');
@@ -93,4 +95,5 @@ server.listen(port, async () => {
 
   console.log(`🟢 Server is running on http://localhost:${port}`);
   console.log(`🔌 Socket.io server is ready for real-time chat`);
+  console.log('🎥 Video Call system initialized');
 });

@@ -9,6 +9,8 @@ import Wallet from "./pages/Wallet";
 import PaymentSuccess from "./pages/PaymentSuccess";
 import { useAuthStore } from "./store/authStore";
 import { useNotificationInit } from "./store/notificationStore";
+import VideoCall from "./pages/VideoCall";
+import VideoCallProvider from "./components/videocall/VideoCallProvider";
 
 // Lazy imports
 const NotFound = lazy(() => import("./pages/NotFound"));
@@ -69,31 +71,34 @@ function App() {
     <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
       <Router>
         <Suspense fallback={<Spinner />}>
-          <Layout>
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/signup" element={<SignIn />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/profile" element={<ProfilePage />} />
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/notifications" element={<NotificationPage />} />
-              <Route path="/jobs" element={<FindJobs />} />
-              <Route path="/jobs/:id" element={<SingleJobDetails />} />
-              <Route path="/freelancers" element={<FindFreelancer />} />
-              <Route path="/wallet" element={<Wallet />} />
-              <Route path="/chat" element={<ChatPage />} />
-              <Route path="/chat/:receiverId" element={<ChatPage />} />
-              <Route path="/payment/success" element={<PaymentSuccess />} />
-              <Route path="/active-jobs" element={<ActiveJobs />} />
-              <Route path="/active-job/:contractId" element={<ActiveJobDetails />} />
-              <Route path="/my-reviews" element={<MyReviews />} />
-              <Route path="/my-analytics" element={<MyAnalytics />} />
-              <Route path="/admin/login" element={<AdminLogin />} />
-              <Route path="/admin/sign-in" element={<AdminSignup />} />
-              <Route path="/admin/dashboard/*" element={<AdminDashboard />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </Layout>
+          <VideoCallProvider>
+            <Layout>
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/signup" element={<SignIn />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/profile" element={<ProfilePage />} />
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/notifications" element={<NotificationPage />} />
+                <Route path="/jobs" element={<FindJobs />} />
+                <Route path="/jobs/:id" element={<SingleJobDetails />} />
+                <Route path="/freelancers" element={<FindFreelancer />} />
+                <Route path="/wallet" element={<Wallet />} />
+                <Route path="/chat" element={<ChatPage />} />
+                <Route path="/chat/:receiverId" element={<ChatPage />} />
+                <Route path="/videocall/:roomId" element={<VideoCall />} />
+                <Route path="/payment/success" element={<PaymentSuccess />} />
+                <Route path="/active-jobs" element={<ActiveJobs />} />
+                <Route path="/active-job/:contractId" element={<ActiveJobDetails />} />
+                <Route path="/my-reviews" element={<MyReviews />} />
+                <Route path="/my-analytics" element={<MyAnalytics />} />
+                <Route path="/admin/login" element={<AdminLogin />} />
+                <Route path="/admin/sign-in" element={<AdminSignup />} />
+                <Route path="/admin/dashboard/*" element={<AdminDashboard />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </Layout>
+          </VideoCallProvider>
         </Suspense>
       </Router>
     </GoogleOAuthProvider>

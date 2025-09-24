@@ -1,6 +1,7 @@
 // components/chat/ChatHeader.tsx
 import React from "react";
 import { useChatStore } from "../../store/chatStore";
+import VideoCallButton from "../videocall/VideoCallButton";
 
 interface ChatHeaderProps {
   onToggleSidebar: () => void;
@@ -98,22 +99,12 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({ onToggleSidebar, className = ""
         {/* Optional: Action buttons */}
         <div className="flex items-center space-x-2">
           {/* Video call button - optional */}
-          <button className="p-2 rounded-full hover:bg-gray-100 text-gray-500 hover:text-[#2E90EB]">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
-              />
-            </svg>
-          </button>
+          <VideoCallButton
+            targetUserId={currentReceiverInfo?._id}
+            targetUserName={currentReceiverInfo?.UserName}
+            size="sm"
+            variant="ghost"
+          />
 
           {/* Info button - optional */}
           <button className="p-2 rounded-full hover:bg-gray-100 text-gray-500 hover:text-[#2E90EB]">
