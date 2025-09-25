@@ -179,150 +179,154 @@ const VideoCall = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-900 relative overflow-hidden max-w-7xl mx-auto">
-      {/* Header */}
-      <div className="absolute top-0 left-0 right-0 z-10 bg-[#134848] bg-opacity-50 backdrop-blur-sm">
-        <div className="flex items-center justify-between p-4">
-          <div className="text-white">
-            <h2 className="text-lg font-semibold">Video Call</h2>
-            <p className="text-sm text-gray-300">
-              {callStatus === "connecting" ? "Connecting..." : `with ${peerName || "Unknown"}`}
-            </p>
-          </div>
+    <div className="relative overflow-hidden h-[calc(100vh-4rem)] bg-gradient-to-b from-[#0b2f2f] via-[#0f3f3f] to-[#134848]">
+      {/* Top Bar */}
+      <div className="absolute top-0 left-0 right-0 z-10">
+        <div className="mx-auto max-w-7xl px-4 pt-3">
+          <div className="flex items-center justify-between rounded-xl border border-white/10 bg-white/5 backdrop-blur-md px-4 py-3 shadow-sm">
+            <div className="text-white">
+              <h2 className="text-xl font-bold tracking-tight">Video Call</h2>
+              <p className="text-xs text-white/70">
+                {callStatus === "connecting" ? "Connecting..." : `with ${peerName || "Unknown"}`}
+              </p>
+            </div>
 
-          <div className="flex items-center space-x-2">
-            <div
-              className={`w-3 h-3 rounded-full ${
-                callStatus === "connected" ? "bg-green-500" : "bg-[#2E90EB]"
-              }`}
-            ></div>
-            <span className="text-sm text-white capitalize">{callStatus}</span>
+            <div className="flex items-center gap-2">
+              <div className={`w-2.5 h-2.5 rounded-full shadow ${callStatus === "connected" ? "bg-[#10B981] shadow-[#10B981]/40" : "bg-[#2E90EB] shadow-[#2E90EB]/40"}`}></div>
+              <span className="text-xs text-white/80 capitalize">{callStatus}</span>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Video Container */}
-      <div className="flex h-screen">
-        {/* Remote Video (Main) */}
-        <div className="flex-1 relative bg-white">
-          {remoteStream ? (
-            <video
-              ref={remoteVideoRef}
-              autoPlay
-              playsInline
-              className="w-full h-full object-cover"
-            />
-          ) : (
-            <div className="w-full h-full flex items-center justify-center">
-              <div className="text-center text-white">
-                <div className="w-32 h-32 bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-4xl font-bold text-white">
-                    {peerName ? peerName.charAt(0).toUpperCase() : "?"}
-                  </span>
+      {/* Video Stage */}
+      <div className="h-full pt-20 pb-28">
+        <div className="mx-auto h-full max-w-7xl px-4">
+          <div className="relative grid h-full grid-cols-1 rounded-2xl border border-white/10 bg-black/30 shadow-md backdrop-blur-xl overflow-hidden">
+            {/* Remote Video (Main) */}
+            <div className="relative h-full w-full">
+              {remoteStream ? (
+                <video
+                  ref={remoteVideoRef}
+                  autoPlay
+                  playsInline
+                  className="h-full w-full object-cover"
+                />
+              ) : (
+                <div className="flex h-full w-full items-center justify-center">
+                  <div className="text-center">
+                    <div className="mx-auto mb-4 flex h-28 w-28 items-center justify-center rounded-full bg-white/10 text-white shadow-inner">
+                      <span className="text-4xl font-bold">
+                        {peerName ? peerName.charAt(0).toUpperCase() : "?"}
+                      </span>
+                    </div>
+                    <p className="mb-1 text-lg font-semibold text-white">
+                      {peerName || "Unknown User"}
+                    </p>
+                    <p className="text-sm text-[#2E90EB]">
+                      {callStatus === "connecting" ? "Connecting..." : "Camera is off"}
+                    </p>
+                  </div>
                 </div>
-                <p className="text-xl font-semibold mb-2 text-[#134848]">
-                  {peerName || "Unknown User"}
-                </p>
-                <p className="text-[#2E90EB]">
-                  {callStatus === "connecting" ? "Connecting..." : "Camera is off"}
-                </p>
-              </div>
-            </div>
-          )}
+              )}
 
-          {/* Local Video (PiP) */}
-          <div className="absolute top-20 right-4 w-48 h-36 bg-gray-800 rounded-lg overflow-hidden border-2 border-gray-600 shadow-lg">
-            {localStream ? (
-              <video
-                ref={localVideoRef}
-                autoPlay
-                playsInline
-                muted
-                className="w-full h-full object-cover"
-              />
-            ) : (
-              <div className="w-full h-full flex items-center justify-center text-white">
-                <Video className="w-8 h-8" />
-              </div>
-            )}
-            {isVideoOff && (
-              <div className="absolute inset-0 bg-gray-800 flex items-center justify-center">
-                <VideoOff className="w-8 h-8 text-gray-400" />
-              </div>
-            )}
+              {/* Local Video (PiP) */}
+              <div className="absolute right-4 top-24 h-36 w-52 overflow-hidden rounded-xl border border-white/20 bg-black/50 shadow-lg backdrop-blur-md">
+                {localStream ? (
+                  <video
+                    ref={localVideoRef}
+                    autoPlay
+                    playsInline
+                    muted
+                    className="h-full w-full object-cover"
+                  />
+                ) : (
+                  <div className="flex h-full w-full items-center justify-center text-white/80">
+                    <Video className="h-8 w-8" />
+                  </div>
+                )}
+                {isVideoOff && (
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/70">
+                    <VideoOff className="h-8 w-8 text-gray-300" />
+                  </div>
+                )}
 
-            {/* You label */}
-            <div className="absolute bottom-1 left-1 bg-black bg-opacity-50 text-white text-xs px-2 py-1 rounded">
-              You
+                {/* You label */}
+                <div className="absolute bottom-1 left-1 rounded bg-black/70 px-2 py-0.5 text-[10px] font-medium text-white">
+                  You
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
       {/* Control Bar */}
-      <div className="absolute bottom-0 left-0 right-0 bg-transparent ity-75 backdrop-blur-sm">
-        <div className="flex items-center justify-center space-x-6 p-6">
-          {/* Mute Button */}
-          <button
-            onClick={toggleMute}
-            className={`w-14 h-14 rounded-full flex items-center justify-center transition-all duration-200 ${
-              isMuted ? "bg-red-500 hover:bg-red-600" : "bg-gray-600 hover:bg-gray-700"
-            }`}
-            title={isMuted ? "Unmute" : "Mute"}
-          >
-            {isMuted ? (
-              <MicOff className="w-6 h-6 text-white" />
-            ) : (
-              <Mic className="w-6 h-6 text-white" />
-            )}
-          </button>
+      <div className="pointer-events-none absolute inset-x-0 bottom-6 z-20">
+        <div className="mx-auto flex max-w-2xl items-center justify-center">
+          <div className="pointer-events-auto flex items-center gap-4 rounded-full border border-white/10 bg-white/10 px-4 py-3 shadow-lg backdrop-blur-xl">
+            {/* Mute Button */}
+            <button
+              onClick={toggleMute}
+              className={`group flex h-12 w-12 items-center justify-center rounded-full transition-all duration-200 ${
+                isMuted ? "bg-[#EF4444] hover:brightness-110" : "bg-white/15 hover:bg-white/25"
+              }`}
+              title={isMuted ? "Unmute" : "Mute"}
+            >
+              {isMuted ? (
+                <MicOff className="h-6 w-6 text-white" />
+              ) : (
+                <Mic className="h-6 w-6 text-white" />
+              )}
+            </button>
 
-          {/* Video Toggle Button */}
-          <button
-            onClick={toggleVideo}
-            className={`w-14 h-14 rounded-full flex items-center justify-center transition-all duration-200 ${
-              isVideoOff ? "bg-red-500 hover:bg-red-600" : "bg-gray-600 hover:bg-gray-700"
-            }`}
-            title={isVideoOff ? "Turn camera on" : "Turn camera off"}
-          >
-            {isVideoOff ? (
-              <VideoOff className="w-6 h-6 text-white" />
-            ) : (
-              <Video className="w-6 h-6 text-white" />
-            )}
-          </button>
+            {/* Video Toggle Button */}
+            <button
+              onClick={toggleVideo}
+              className={`group flex h-12 w-12 items-center justify-center rounded-full transition-all duration-200 ${
+                isVideoOff ? "bg-[#EF4444] hover:brightness-110" : "bg-white/15 hover:bg-white/25"
+              }`}
+              title={isVideoOff ? "Turn camera on" : "Turn camera off"}
+            >
+              {isVideoOff ? (
+                <VideoOff className="h-6 w-6 text-white" />
+              ) : (
+                <Video className="h-6 w-6 text-white" />
+              )}
+            </button>
 
-          {/* Screen Share Button */}
-          <button
-            onClick={handleScreenShare}
-            className={`w-14 h-14 rounded-full flex items-center justify-center transition-all duration-200 ${
-              isScreenSharing ? "bg-blue-500 hover:bg-blue-600" : "bg-gray-600 hover:bg-gray-700"
-            }`}
-            title={isScreenSharing ? "Stop sharing" : "Share screen"}
-          >
-            {isScreenSharing ? (
-              <MonitorOff className="w-6 h-6 text-white" />
-            ) : (
-              <Monitor className="w-6 h-6 text-white" />
-            )}
-          </button>
+            {/* Screen Share Button */}
+            <button
+              onClick={handleScreenShare}
+              className={`group flex h-12 w-12 items-center justify-center rounded-full transition-all duration-200 ${
+                isScreenSharing ? "bg-[#2E90EB] hover:brightness-110" : "bg-white/15 hover:bg-white/25"
+              }`}
+              title={isScreenSharing ? "Stop sharing" : "Share screen"}
+            >
+              {isScreenSharing ? (
+                <MonitorOff className="h-6 w-6 text-white" />
+              ) : (
+                <Monitor className="h-6 w-6 text-white" />
+              )}
+            </button>
 
-          {/* End Call Button */}
-          <button
-            onClick={handleEndCall}
-            className="w-16 h-16 bg-red-500 hover:bg-red-600 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-105 shadow-lg"
-            title="End call"
-          >
-            <PhoneOff className="w-8 h-8 text-white" />
-          </button>
+            {/* End Call Button */}
+            <button
+              onClick={handleEndCall}
+              className="ml-1 flex h-14 w-14 items-center justify-center rounded-full bg-[#EF4444] text-white shadow-lg transition-transform duration-200 hover:scale-105"
+              title="End call"
+            >
+              <PhoneOff className="h-7 w-7" />
+            </button>
+          </div>
         </div>
       </div>
 
       {/* Screen Share Indicator */}
       {isScreenSharing && (
-        <div className="absolute top-20 left-4 bg-blue-500 text-white px-4 py-2 rounded-lg shadow-lg">
-          <div className="flex items-center space-x-2">
-            <Monitor className="w-4 h-4" />
+        <div className="absolute left-4 top-24 rounded-lg bg-[#2E90EB] px-4 py-2 text-white shadow-lg">
+          <div className="flex items-center gap-2">
+            <Monitor className="h-4 w-4" />
             <span className="text-sm font-medium">You're sharing your screen</span>
           </div>
         </div>
@@ -330,16 +334,16 @@ const VideoCall = () => {
 
       {/* Connection Status Overlay */}
       {!isConnected && (
-        <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 text-center">
-            <div className="animate-spin w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full mx-auto mb-4"></div>
-            <p className="text-gray-800">Connecting to video call service...</p>
+        <div className="absolute inset-0 z-30 flex items-center justify-center bg-black/50">
+          <div className="rounded-xl border border-white/10 bg-white p-6 text-center shadow-xl">
+            <div className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-4 border-[#2E90EB] border-t-transparent"></div>
+            <p className="text-sm text-gray-800">Connecting to video call service...</p>
           </div>
         </div>
       )}
 
       {/* Debug Info (remove in production) */}
-      <div className="absolute top-4 left-4 bg-black bg-opacity-50 text-white text-xs p-2 rounded">
+      <div className="absolute left-4 top-4 rounded-md bg-black/60 p-2 text-xs text-white">
         <div>Room: {roomId}</div>
         <div>Connected: {isConnected ? "Yes" : "No"}</div>
         <div>Local Stream: {localStream ? "Yes" : "No"}</div>
