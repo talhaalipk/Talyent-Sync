@@ -22,14 +22,11 @@ const router = Router();
 // Apply authentication middleware to all routes
 router.use(protect);
 
-
 // GET /api/contracts/active-jobs
 router.get('/active-jobs', getActiveJobs);
 
-
 // GET /api/contracts/active-job/:contractId
 router.get('/active-job/:contractId', getActiveJobDetails);
-
 
 //   POST /api/contracts/active-job/:contractId/add-timesheet
 //   Add a timesheet entry to an hourly contract
@@ -43,7 +40,6 @@ router.post(
   addTimesheet
 );
 
-
 // PATCH /api/contracts/active-job/:contractId/timesheet-approval
 // Approve or reject a timesheet entry
 // Only accessible by clients
@@ -56,7 +52,6 @@ router.patch(
   updateTimesheetStatus
 );
 
-
 // PATCH /api/contracts/active-job/:contractId/request-completion
 // Request contract completion (freelancer marks work as done)
 // Only accessible by freelancers
@@ -67,7 +62,6 @@ router.patch(
   requireRole(['freelancer']),
   requestContractCompletion
 );
-
 
 // PATCH /api/contracts/active-job/:contractId/completion-response
 // Client response to completion request

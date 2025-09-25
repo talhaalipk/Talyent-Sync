@@ -10,8 +10,6 @@ const JWT_EXPIRES = '1d';
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID || '';
 const googleClient = new OAuth2Client(GOOGLE_CLIENT_ID);
 
-console.log(JWT_SECRET);
-
 // Helper: Generate JWT
 const generateToken = (id: string, role: string) => {
   return jwt.sign({ id, role }, JWT_SECRET, { expiresIn: JWT_EXPIRES });
@@ -24,22 +22,20 @@ export const registerUser = async (req: Request, res: Response) => {
     if (req.body === undefined) {
       return res.status(400).json({ message: 'Body Undefined' });
     }
-    console.log('11');
+
     const { UserName, email, password, role } = req.body;
-    console.log('22');
+
     if (!UserName || !email || !password || !role) {
       return res.status(400).json({ message: 'All fields are required' });
     }
-    console.log('33');
+
     const existingUser = await User.findOne({ email });
-    console.log('44');
+
     if (existingUser) {
       return res.status(400).json({ message: 'Email  already exists' });
     }
 
-    console.log('1');
     const hashedPassword = await bcrypt.hash(password, 10);
-    console.log('2');
     const user = await User.create({
       UserName,
       email,
@@ -55,7 +51,6 @@ export const registerUser = async (req: Request, res: Response) => {
       ledger: [],
     });
 
-    console.log('3');
     const token = generateToken((user._id as any).toString(), user.role);
 
     // Set cookie
@@ -87,18 +82,16 @@ export const loginUser = async (req: Request, res: Response) => {
     console.log('LOGIN MA ');
     const { email, password } = req.body;
 
-    // role is NOT required anymore
     if (!email || !password) {
       return res
         .status(400)
         .json({ message: 'Email and password are required' });
     }
 
-    // Find user only by email
     const user = await User.findOne({ email });
     if (!user) return res.status(400).json({ message: 'Invalid credentials' });
 
-    // NEW: Check if user account is active
+    // Check if user account is active
     if (!user.isActive) {
       return res.status(403).json({
         message: 'Account is deactivated. Please contact support.',
@@ -121,12 +114,12 @@ export const loginUser = async (req: Request, res: Response) => {
       maxAge: 24 * 60 * 60 * 1000,
     });
 
-    // Response remains same
+    // Response
     return res.status(200).json({
       message: 'Login successful',
       user: {
         id: user._id,
-        role: user.role, 
+        role: user.role,
         email: user.email,
         UserName: user.UserName,
         isActive: user.isActive,
@@ -164,7 +157,7 @@ export const verifyUser = async (req: Request, res: Response) => {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    // NEW: Check if user account is still active
+    //Check if user account is still active
     if (!user.isActive) {
       // Clear the cookie since account is deactivated
       res.clearCookie('token');
@@ -182,7 +175,7 @@ export const verifyUser = async (req: Request, res: Response) => {
 // ================= Get Id and Role =================
 export const getIdAndRole = async (req: Request, res: Response) => {
   try {
-    // Token from cookie or Bearer token in Authorization header
+    // Token from cookie
     const token =
       req.cookies?.token || req.headers.authorization?.split(' ')[1];
 
@@ -195,7 +188,7 @@ export const getIdAndRole = async (req: Request, res: Response) => {
       role: string;
     };
 
-    // user is still active 
+    // Check user is still active
     const user = await User.findById(decoded.id).select('isActive');
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
@@ -257,7 +250,7 @@ export const toggleUserActiveStatus = async (req: Request, res: Response) => {
 export const googleAuthUser = async (req: Request, res: Response) => {
   try {
     console.log('start');
-    const { token, role } = req.body; 
+    const { token, role } = req.body;
     if (!token) {
       return res.status(400).json({ message: 'Google token is required' });
     }
@@ -294,7 +287,7 @@ export const googleAuthUser = async (req: Request, res: Response) => {
         UserName,
         email,
         password: hashedPassword,
-        role: role || 'client', 
+        role: role || 'client',
         isActive: true,
         profilePic: payload.picture,
       });

@@ -13,7 +13,9 @@ function ProfileInfo() {
 
   if (loading)
     return (
-      <p className="text-center py-12 text-gray-500 text-lg animate-pulse">Loading profile...</p>
+      <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+        <p className="text-center text-gray-500 text-sm animate-pulse">Loading profile...</p>
+      </div>
     );
 
   if (!profile)
@@ -22,26 +24,19 @@ function ProfileInfo() {
   return (
     <>
       <motion.section
-        className="bg-white shadow-md rounded-2xl p-6 w-full max-w-3xl mx-auto mt-6 border border-gray-100"
+        className=" rounded-2xl p-6 w-full border border-gray-100 sticky top-4"
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
       >
-        {/* Header */}
-        <div className="mb-6">
-          <h2 className="text-center text-2xl md:text-3xl font-bold text-[#134848] tracking-tight">
-            User Profile
-          </h2>
-        </div>
-
         {/* Content */}
-        <div className="flex flex-col md:flex-row gap-8 items-center md:items-start">
+        <div className="flex flex-col gap-6">
           {/* Left: Profile Picture */}
-          <motion.div className="relative flex-shrink-0 group" whileHover={{ scale: 1.05 }}>
+          <motion.div className="relative mx-auto" whileHover={{ scale: 1.03 }}>
             <img
               src={profile.profilePic || "/default-avatar.png"}
               alt="Profile"
-              className="w-32 h-32 md:w-44 md:h-44 rounded-full border-4 border-[#134848] object-cover shadow-md"
+              className="w-28 h-28 md:w-32 md:h-32 rounded-full border-4 border-white object-cover shadow-md ring-2 ring-[#134848]"
             />
 
             {/* + Overlay Button */}
@@ -54,17 +49,14 @@ function ProfileInfo() {
           </motion.div>
 
           {/* Right: Info */}
-          <div className="flex-1 space-y-4 text-center md:text-left">
-            <h2 className=" text-xl font-semibold text-gray-800">{profile.UserName}</h2>
-
-            <div className="space-y-2 text-gray-700">
-              <p className="text-base md:text-lg">
-                <span className="font-semibold">Email:</span> {profile.email}
-              </p>
-              <p className="text-base md:text-lg">
-                <span className="font-semibold">Role:</span>{" "}
-                <span className="capitalize text-[#2E90EB] font-medium">{profile.role}</span>
-              </p>
+          <div className="text-center">
+            <h2 className="text-xl md:text-2xl font-bold text-[#134848] tracking-tight">
+              {profile.UserName}
+            </h2>
+            <p className="mt-1 text-sm text-gray-600">{profile.email}</p>
+            <div className="mt-3 inline-flex items-center gap-2 rounded-full bg-[#F9FAFB] px-3 py-1 text-xs font-medium text-[#1F2937] ring-1 ring-gray-200">
+              <span className="h-2 w-2 rounded-full bg-[#2E90EB]"></span>
+              <span className="capitalize">{profile.role}</span>
             </div>
           </div>
         </div>

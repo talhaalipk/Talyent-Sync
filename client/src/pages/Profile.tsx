@@ -18,20 +18,37 @@ function Profile() {
   }, [verifylogin, fetchProfile]);
 
   return (
-    <div className="min-h-screen bg-[#F9FAFB] flex flex-col items-center p-6">
+    <div className="min-h-screen bg-[#F9FAFB]">
       {isLoggedIn ? (
-        <>
-          <ProfileInfo />
+        <div className="mx-auto max-w-7xl px-4 py-6">
+          <div className="mb-4">
+            <h1 className="text-2xl md:text-3xl font-bold text-[#134848] tracking-tight">
+              My Profile
+            </h1>
+            <p className="text-sm text-gray-600">Manage your account information and security</p>
+          </div>
 
-          {/* ✅ Conditional render based on role */}
-          {profile?.role === "freelancer" && <ProfileDetailsFreelancer profile={profile} />}
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-[360px,1fr]">
+            {/* Left column: Profile summary */}
+            <div className="space-y-6">
+              <ProfileInfo />
+            </div>
 
-          {profile?.role === "client" && <ProfileDetailsClient profile={profile} />}
+            {/* Right column: Details + Security */}
+            <div className="space-y-6">
+              {/* ✅ Conditional render based on role */}
+              {profile?.role === "freelancer" && <ProfileDetailsFreelancer profile={profile} />}
 
-          <UpdatePassword />
-        </>
+              {profile?.role === "client" && <ProfileDetailsClient profile={profile} />}
+
+              <UpdatePassword />
+            </div>
+          </div>
+        </div>
       ) : (
-        <PleaseLogin />
+        <div className="mx-auto max-w-7xl px-4 py-10">
+          <PleaseLogin />
+        </div>
       )}
     </div>
   );

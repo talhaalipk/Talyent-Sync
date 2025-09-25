@@ -96,7 +96,7 @@ export const useNotificationStore = create<NotificationStore>()(
           socket.disconnect();
         }
 
-        const socketUrl = import.meta.env.VITE_SOCKET_URL || "http://localhost:5000";
+        const socketUrl = import.meta.env.VITE_BACKED_BASE_URL_SOCKET || "http://localhost:5000";
 
         // Create new socket connection to notification namespace
         const newSocket = io(`${socketUrl}/notifications`, {

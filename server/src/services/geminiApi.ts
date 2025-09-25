@@ -124,7 +124,6 @@ export const validateCVText = (text: string): boolean => {
   return foundKeywords.length >= 2 && text.length > 100;
 };
 
-
 export const generateJobDetailsAI = async (
   title: string,
   category: string,

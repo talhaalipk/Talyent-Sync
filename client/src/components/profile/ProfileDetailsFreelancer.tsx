@@ -72,16 +72,16 @@ export default function ProfileDetailsFreelancer({ profile }: { profile: User })
   };
 
   return (
-    <div className="bg-white shadow-md rounded-2xl p-6 w-full max-w-3xl mx-auto mt-6">
+    <div className="bg-white shadow-sm rounded-2xl p-6 w-full border border-gray-100">
       {/* Header */}
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-semibold text-gray-800">Freelancer Profile</h2>
+      <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+        <h2 className="text-xl font-bold text-[#134848] tracking-tight">Freelancer Profile</h2>
 
         <div className="flex gap-2">
           {isEditing && (
             <button
               onClick={() => setShowModal(true)}
-              className="flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition"
+              className="flex items-center gap-2 rounded-lg bg-purple-600 px-4 py-2 text-white shadow-sm transition hover:bg-purple-700"
             >
               <Brain size={18} /> Extract Skills
             </button>
@@ -92,14 +92,14 @@ export default function ProfileDetailsFreelancer({ profile }: { profile: User })
           {isEditing ? (
             <button
               onClick={handleSave}
-              className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition"
+              className="flex items-center gap-2 rounded-lg bg-green-600 px-4 py-2 text-white shadow-sm transition hover:bg-green-700"
             >
               <Save size={18} /> Save
             </button>
           ) : (
             <button
               onClick={() => setIsEditing(true)}
-              className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+              className="flex items-center gap-2 rounded-lg bg-[#2E90EB] px-4 py-2 text-white shadow-sm transition hover:brightness-110"
             >
               <Edit size={18} /> Update
             </button>
@@ -108,21 +108,25 @@ export default function ProfileDetailsFreelancer({ profile }: { profile: User })
       </div>
 
       {/* API response message */}
-      {message && <div className="mb-4 text-sm text-center text-green-600">{message}</div>}
+      {message && (
+        <div className="mb-4 rounded-lg border border-green-100 bg-green-50 px-3 py-2 text-center text-sm text-green-700">
+          {message}
+        </div>
+      )}
 
       {/* Bio Description */}
       <div className="mt-2">
-        <label className="text-sm font-medium text-gray-700">Bio Description</label>
+        <label className="text-sm font-medium text-[#1F2937]">Bio Description</label>
         {isEditing ? (
           <textarea
-            className="w-full mt-2 p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            className="mt-2 w-full rounded-lg border border-gray-300 p-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#2E90EB]"
             rows={4}
             placeholder="Write a short bio about yourself..."
             value={form.bio_desc}
             onChange={(e) => handleChange("bio_desc", e.target.value)}
           />
         ) : form.bio_desc ? (
-          <p className="mt-2 text-gray-700 whitespace-pre-line">{form.bio_desc}</p>
+          <p className="mt-2 whitespace-pre-line text-gray-700">{form.bio_desc}</p>
         ) : (
           <p className="text-gray-500">No bio added</p>
         )}
@@ -130,7 +134,7 @@ export default function ProfileDetailsFreelancer({ profile }: { profile: User })
 
       {/* Skills */}
       <div className="mt-4">
-        <label className="text-sm font-medium text-gray-700">Skills</label>
+        <label className="text-sm font-medium text-[#1F2937]">Skills</label>
         {isEditing ? (
           <Input
             label=""
@@ -144,9 +148,9 @@ export default function ProfileDetailsFreelancer({ profile }: { profile: User })
             }
           />
         ) : form.skills.length > 0 ? (
-          <div className="flex flex-wrap gap-2 mt-2">
+          <div className="mt-2 flex flex-wrap gap-2">
             {form.skills.map((s, i) => (
-              <span key={i} className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm">
+              <span key={i} className="rounded-full bg-blue-100 px-3 py-1 text-sm text-blue-700">
                 {s}
               </span>
             ))}
@@ -166,17 +170,17 @@ export default function ProfileDetailsFreelancer({ profile }: { profile: User })
             onChange={(e) => handleChange("hourlyRate", Number(e.target.value))}
           />
         ) : (
-          <p className="text-gray-700 font-medium">Hourly Rate: ${form.hourlyRate}</p>
+          <p className="font-medium text-gray-700">Hourly Rate: ${form.hourlyRate}</p>
         )}
       </div>
 
       {/* Portfolio */}
       <div className="mt-4">
-        <label className="text-sm font-medium text-gray-700">Portfolio</label>
+        <label className="text-sm font-medium text-[#1F2937]">Portfolio</label>
         {isEditing ? (
-          <div className="space-y-3 mt-2">
+          <div className="mt-2 space-y-3">
             {form.portfolio.map((item, idx) => (
-              <div key={idx} className="flex gap-2 items-center">
+              <div key={idx} className="flex items-center gap-2">
                 <Input
                   label=""
                   placeholder="Title"
@@ -191,7 +195,7 @@ export default function ProfileDetailsFreelancer({ profile }: { profile: User })
                 />
                 <button
                   onClick={() => removePortfolio(idx)}
-                  className="text-red-500 hover:text-red-700"
+                  className="text-red-500 hover:text-red-600"
                 >
                   ✕
                 </button>
@@ -199,13 +203,13 @@ export default function ProfileDetailsFreelancer({ profile }: { profile: User })
             ))}
             <button
               onClick={addPortfolio}
-              className="px-3 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
+              className="rounded-lg bg-[#2E90EB] px-3 py-1 text-white transition hover:brightness-110"
             >
               + Add Portfolio
             </button>
           </div>
         ) : form.portfolio.length > 0 ? (
-          <ul className="list-disc ml-6 text-gray-700 mt-2">
+          <ul className="ml-6 mt-2 list-disc text-gray-700">
             {form.portfolio.map((item, idx) => (
               <li key={idx}>
                 <span className="font-medium">{item.title}:</span>{" "}
@@ -213,7 +217,7 @@ export default function ProfileDetailsFreelancer({ profile }: { profile: User })
                   href={item.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-blue-600 hover:underline"
+                  className="text-[#2E90EB] hover:underline"
                 >
                   {item.url}
                 </a>
@@ -227,11 +231,11 @@ export default function ProfileDetailsFreelancer({ profile }: { profile: User })
 
       {/* Certifications */}
       <div className="mt-4">
-        <label className="text-sm font-medium text-gray-700">Certifications</label>
+        <label className="text-sm font-medium text-[#1F2937]">Certifications</label>
         {isEditing ? (
-          <div className="space-y-3 mt-2">
+          <div className="mt-2 space-y-3">
             {form.certifications.map((cert, idx) => (
-              <div key={idx} className="flex gap-2 items-center">
+              <div key={idx} className="flex items-center gap-2">
                 <Input
                   label=""
                   placeholder="Title"
@@ -252,7 +256,7 @@ export default function ProfileDetailsFreelancer({ profile }: { profile: User })
                 />
                 <button
                   onClick={() => removeCertification(idx)}
-                  className="text-red-500 hover:text-red-700"
+                  className="text-red-500 hover:text-red-600"
                 >
                   ✕
                 </button>
@@ -260,13 +264,13 @@ export default function ProfileDetailsFreelancer({ profile }: { profile: User })
             ))}
             <button
               onClick={addCertification}
-              className="px-3 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
+              className="rounded-lg bg-[#2E90EB] px-3 py-1 text-white transition hover:brightness-110"
             >
               + Add Certification
             </button>
           </div>
         ) : form.certifications.length > 0 ? (
-          <ul className="list-disc ml-6 text-gray-700 mt-2">
+          <ul className="ml-6 mt-2 list-disc text-gray-700">
             {form.certifications.map((c, idx) => (
               <li key={idx}>
                 {c.title} – {c.issuer} ({c.year})
@@ -280,7 +284,7 @@ export default function ProfileDetailsFreelancer({ profile }: { profile: User })
 
       {/* Location */}
       <div className="mt-4">
-        <label className="text-sm font-medium text-gray-700">Location</label>
+        <label className="text-sm font-medium text-[#1F2937]">Location</label>
         {isEditing ? (
           <Input
             label=""
@@ -289,7 +293,7 @@ export default function ProfileDetailsFreelancer({ profile }: { profile: User })
             placeholder="Enter your location"
           />
         ) : (
-          <p className="text-gray-700 flex items-center gap-2">
+          <p className="flex items-center gap-2 text-gray-700">
             <MapPin size={16} /> {form.location || "No location added"}
           </p>
         )}

@@ -192,7 +192,9 @@ const VideoCall = () => {
             </div>
 
             <div className="flex items-center gap-2">
-              <div className={`w-2.5 h-2.5 rounded-full shadow ${callStatus === "connected" ? "bg-[#10B981] shadow-[#10B981]/40" : "bg-[#2E90EB] shadow-[#2E90EB]/40"}`}></div>
+              <div
+                className={`w-2.5 h-2.5 rounded-full shadow ${callStatus === "connected" ? "bg-[#10B981] shadow-[#10B981]/40" : "bg-[#2E90EB] shadow-[#2E90EB]/40"}`}
+              ></div>
               <span className="text-xs text-white/80 capitalize">{callStatus}</span>
             </div>
           </div>
@@ -299,7 +301,9 @@ const VideoCall = () => {
             <button
               onClick={handleScreenShare}
               className={`group flex h-12 w-12 items-center justify-center rounded-full transition-all duration-200 ${
-                isScreenSharing ? "bg-[#2E90EB] hover:brightness-110" : "bg-white/15 hover:bg-white/25"
+                isScreenSharing
+                  ? "bg-[#2E90EB] hover:brightness-110"
+                  : "bg-white/15 hover:bg-white/25"
               }`}
               title={isScreenSharing ? "Stop sharing" : "Share screen"}
             >

@@ -59,18 +59,17 @@ function App() {
   const { initialize, cleanup } = useNotificationInit();
   console.log("App Redered, user");
   console.log("App Redered, user");
-  
+
   useEffect(() => {
     if (user) {
-      // Initialize notifications when user is logged in
+      // Initialize notifications - user is logged in
       initialize();
     }
-    // Always disconnect socket when user changes or component unmounts
     return () => {
       cleanup();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user]); // Depend on user only; initialize/cleanup are memoized
+  }, [user]); 
 
   return (
     <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>

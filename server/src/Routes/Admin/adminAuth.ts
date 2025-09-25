@@ -71,7 +71,6 @@ const validateAdminLogin = [
   handleValidationErrors,
 ];
 
-
 // POST /api/admin/auth/register
 // Register a new admin account
 // Body: { UserName, email, password, confirmPassword }

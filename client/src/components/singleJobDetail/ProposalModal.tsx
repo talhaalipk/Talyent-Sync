@@ -2,10 +2,10 @@ import { useState } from "react";
 import { ArrowLeft, Plus, Upload, X } from "lucide-react";
 import toast from "react-hot-toast";
 import Button from "../../ui/Button";
-import api from "../../utils/axiosInstance"; 
-import { useParams } from "react-router-dom"; 
+import api from "../../utils/axiosInstance";
+import { useParams } from "react-router-dom";
 import { useJobStore } from "../../store/singleJobstore";
-import { useNotificationSender } from "../../store/notificationStore"; 
+import { useNotificationSender } from "../../store/notificationStore";
 
 interface ProposalModalProps {
   isOpen: boolean;

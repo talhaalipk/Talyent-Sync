@@ -1,19 +1,19 @@
 // src/components/videocall/IncomingCallModal.tsx
-import { Phone, PhoneOff, User } from 'lucide-react';
-import { useVideoCallStore } from '../../store/videoCallStore';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
+import { Phone, PhoneOff, User } from "lucide-react";
+import { useVideoCallStore } from "../../store/videoCallStore";
+import { motion, AnimatePresence } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 
 const IncomingCallModal = () => {
   const { incomingCall, acceptCall, rejectCall } = useVideoCallStore();
   const navigate = useNavigate();
 
-  console.log('🎯 Incoming call modal render:', incomingCall);
+  console.log("🎯 Incoming call modal render:", incomingCall);
 
   if (!incomingCall) return null;
 
   const handleAccept = () => {
-    console.log('✅ User accepted call');
+    console.log("✅ User accepted call");
     const roomId = acceptCall() as unknown as string | undefined;
     if (roomId) {
       navigate(`/videocall/${roomId}`);
@@ -21,7 +21,7 @@ const IncomingCallModal = () => {
   };
 
   const handleReject = () => {
-    console.log('❌ User rejected call');
+    console.log("❌ User rejected call");
     rejectCall();
   };
 
@@ -29,10 +29,10 @@ const IncomingCallModal = () => {
     <AnimatePresence>
       {incomingCall && (
         <motion.div
-          initial={{ x: '100%', opacity: 0 }}
+          initial={{ x: "100%", opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
-          exit={{ x: '100%', opacity: 0 }}
-          transition={{ duration: 0.4, ease: 'easeOut' }}
+          exit={{ x: "100%", opacity: 0 }}
+          transition={{ duration: 0.4, ease: "easeOut" }}
           className="fixed top-6 right-6 z-50 w-full max-w-md"
         >
           <div className="bg-white rounded-xl shadow-lg border border-gray-200 flex items-center p-4">
@@ -51,9 +51,7 @@ const IncomingCallModal = () => {
 
             {/* Caller Info */}
             <div className="flex-1 ml-4">
-              <h3 className="text-base font-semibold text-gray-900">
-                {incomingCall.callerName}
-              </h3>
+              <h3 className="text-base font-semibold text-gray-900">{incomingCall.callerName}</h3>
               <p className="text-sm text-gray-500">is calling you…</p>
             </div>
 

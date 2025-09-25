@@ -13,7 +13,7 @@ function ClientDashBorad() {
       {/* <WelcomeAndProfile /> */}
 
       {/* Tabs */}
-      <div className="bg-white shadow-md rounded-2xl p-6">
+      <div className="bg-white rounded-2xl p-6">
         {/* Tab Buttons */}
         <div className="flex border-b border-gray-200 mb-6">
           <button

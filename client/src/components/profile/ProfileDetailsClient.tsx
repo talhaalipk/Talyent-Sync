@@ -45,21 +45,21 @@ export default function ProfileDetailsClient({ profile }: { profile: User }) {
   };
 
   return (
-    <div className="bg-white shadow-md rounded-2xl p-6 w-full max-w-3xl mx-auto mt-6">
+    <div className="bg-white shadow-sm rounded-2xl p-6 w-full border border-gray-100">
       {/* Header */}
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-semibold text-[#134848]">Client Profile</h2>
+      <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+        <h2 className="text-xl font-bold tracking-tight text-[#134848]">Client Profile</h2>
         {isEditing ? (
           <button
             onClick={handleSave}
-            className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition"
+            className="flex items-center gap-2 rounded-lg bg-green-600 px-4 py-2 text-white shadow-sm transition hover:bg-green-700"
           >
             <Save size={18} /> Save
           </button>
         ) : (
           <button
             onClick={() => setIsEditing(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+            className="flex items-center gap-2 rounded-lg bg-[#2E90EB] px-4 py-2 text-white shadow-sm transition hover:brightness-110"
           >
             <Edit size={18} /> Update
           </button>
@@ -68,7 +68,7 @@ export default function ProfileDetailsClient({ profile }: { profile: User }) {
 
       {/* Location */}
       <div className="mt-3">
-        <label className="text-sm font-medium text-gray-700">Location</label>
+        <label className="text-sm font-medium text-[#1F2937]">Location</label>
         {isEditing ? (
           <Input
             label=""
@@ -78,7 +78,7 @@ export default function ProfileDetailsClient({ profile }: { profile: User }) {
             placeholder="Enter location"
           />
         ) : (
-          <p className="text-gray-700 flex items-center gap-2 mt-1">
+          <p className="mt-1 flex items-center gap-2 text-gray-700">
             <MapPin size={16} /> {form.location}
           </p>
         )}
@@ -86,7 +86,7 @@ export default function ProfileDetailsClient({ profile }: { profile: User }) {
 
       {/* Company Name */}
       <div className="mt-3">
-        <label className="text-sm font-medium text-gray-700">Company Name</label>
+        <label className="text-sm font-medium text-[#1F2937]">Company Name</label>
         {isEditing ? (
           <Input
             label=""
@@ -96,7 +96,7 @@ export default function ProfileDetailsClient({ profile }: { profile: User }) {
             placeholder="Enter company name"
           />
         ) : (
-          <p className="text-gray-700 flex items-center gap-2 mt-1">
+          <p className="mt-1 flex items-center gap-2 text-gray-700">
             <Building2 size={16} /> {form.companyName}
           </p>
         )}
@@ -104,7 +104,7 @@ export default function ProfileDetailsClient({ profile }: { profile: User }) {
 
       {/* Budget */}
       <div className="mt-3">
-        <label className="text-sm font-medium text-gray-700">Average Budget</label>
+        <label className="text-sm font-medium text-[#1F2937]">Average Budget</label>
         {isEditing ? (
           <Input
             type="number"
@@ -115,7 +115,7 @@ export default function ProfileDetailsClient({ profile }: { profile: User }) {
             placeholder="Enter budget"
           />
         ) : (
-          <p className="text-gray-700 flex items-center gap-2 mt-1">
+          <p className="mt-1 flex items-center gap-2 text-gray-700">
             <Wallet size={16} /> ${form.budget}
           </p>
         )}
@@ -123,18 +123,18 @@ export default function ProfileDetailsClient({ profile }: { profile: User }) {
 
       {/* Company Description */}
       <div className="mt-3">
-        <label className="text-sm font-medium text-gray-700">Company Description</label>
+        <label className="text-sm font-medium text-[#1F2937]">Company Description</label>
         {isEditing ? (
           <textarea
             name="companyDescription"
             value={form.companyDescription}
             onChange={handleChange}
             rows={4}
-            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#2E90EB]"
+            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#2E90EB]"
             placeholder="Enter description"
           />
         ) : (
-          <p className="text-gray-700 mt-1">{form.companyDescription}</p>
+          <p className="mt-1 text-gray-700">{form.companyDescription}</p>
         )}
       </div>
     </div>

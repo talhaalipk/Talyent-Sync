@@ -32,7 +32,7 @@ export default function JobCard({ job, onRefresh }: JobCardProps) {
 
   return (
     <>
-      <div className="border border-gray-200 rounded-xl p-4 sm:p-5 bg-[#F9FAFB] shadow-sm hover:shadow-md transition h-full flex flex-col justify-between">
+      <div className="border border-gray-200 rounded-xl p-4 sm:p-5  shadow-sm hover:shadow-md transition h-full flex flex-col justify-between">
         {/* Header */}
         <div className="flex justify-between items-start gap-3">
           <div className="flex-1 min-w-0">
@@ -68,8 +68,8 @@ export default function JobCard({ job, onRefresh }: JobCardProps) {
               className={`w-full sm:w-auto px-3 sm:px-4 py-2 rounded-lg text-sm font-medium transition
 								${
                   loadingAction === "update"
-                    ? "bg-blue-300 cursor-not-allowed"
-                    : "bg-blue-600 hover:bg-blue-700 text-white"
+                    ? "bg-[#134848]cursor-not-allowed"
+                    : "bg-[#134848] hover:bg-[#176060] text-white"
                 }
 							`}
             >
@@ -83,8 +83,8 @@ export default function JobCard({ job, onRefresh }: JobCardProps) {
               className={`w-full sm:w-auto px-3 sm:px-4 py-2 rounded-lg text-sm font-medium transition
 								${
                   loadingAction === "delete"
-                    ? "bg-red-300 cursor-not-allowed"
-                    : "bg-red-600 hover:bg-red-700 text-white"
+                    ? "bg-[#2E90EB] cursor-not-allowed"
+                    : "bg-[#2E90EB] hover:bg-[#4CA4F0] text-white"
                 }
 							`}
             >

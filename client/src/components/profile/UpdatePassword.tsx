@@ -64,10 +64,10 @@ export default function UpdatePassword() {
   };
 
   return (
-    <div className="bg-white shadow-md rounded-2xl p-6 w-full max-w-3xl mx-auto mt-6">
+    <div className="w-full rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
       {/* Header */}
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-xl font-semibold text-[#134848] flex items-center gap-2">
+      <div className="mb-6 flex items-center justify-between">
+        <h2 className="flex items-center gap-2 text-xl font-bold text-[#134848]">
           <Lock size={20} /> Update Password
         </h2>
 
@@ -75,14 +75,14 @@ export default function UpdatePassword() {
           <button
             onClick={handleUpdate}
             disabled={loading}
-            className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition disabled:opacity-50"
+            className="flex items-center gap-2 rounded-lg bg-green-600 px-4 py-2 text-white transition hover:bg-green-700 disabled:opacity-50"
           >
             <Save size={18} /> {loading ? "Saving..." : "Save"}
           </button>
         ) : (
           <button
             onClick={() => setIsEditing(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+            className="flex items-center gap-2 rounded-lg bg-[#2E90EB] px-4 py-2 text-white transition hover:brightness-110"
           >
             <Edit size={18} /> Update
           </button>
@@ -90,7 +90,7 @@ export default function UpdatePassword() {
       </div>
 
       {/* Form Layout */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
         {/* Left Column - Old Password */}
         <div>
           <Input

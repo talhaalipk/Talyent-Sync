@@ -35,7 +35,7 @@ export default function HeroSection() {
               🚀 Get Started
             </ButtonLink>
             <ButtonLink
-              to="/explore"
+              to="/jobs"
               variant="outline"
               className="px-6 py-3 text-lg hover:bg-[#2E90EB]/10 transition"
             >

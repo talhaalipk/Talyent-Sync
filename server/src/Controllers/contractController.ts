@@ -731,7 +731,6 @@ const processTimesheetPayment = async (
   }
 };
 
-
 const processContractPaymentSimple = async (
   contractId: string,
   clientId: string,

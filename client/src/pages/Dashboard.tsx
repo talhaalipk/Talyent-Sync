@@ -32,10 +32,7 @@ export default function Dashboard() {
     <div className="min-h-screen  p-6 sm:mx-10">
       <div className="max-w-7xl mx-auto">
         {" "}
-        {/* 👈 max width wrapper */}
-        <h1 className="text-2xl font-bold text-[#134848] mb-6">
-          Welcome to DashBorad, {profile.name || profile.UserName} 👋
-        </h1>
+        <h1 className="text-3xl font-bold text-[#134848] mb-2">Jobs & Proposals</h1>
         {profile.role === "client" ? <ClientDashboard /> : <FreelancerDashboard />}
       </div>
     </div>

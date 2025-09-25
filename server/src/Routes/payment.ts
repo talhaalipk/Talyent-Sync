@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import express from 'express';
-import { protect } from '../Middleware/auth'; 
+import { protect } from '../Middleware/auth';
 import {
   deposit,
   withdraw,

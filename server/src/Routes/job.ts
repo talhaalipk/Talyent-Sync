@@ -8,7 +8,7 @@ import {
   createJob,
   updateJob,
   deleteJob,
-  searchJobsPublic, 
+  searchJobsPublic,
   getPublicJobById,
   generateJobDetailsController,
 } from '../Controllers/jobController';

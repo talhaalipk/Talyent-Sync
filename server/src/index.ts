@@ -95,5 +95,4 @@ server.listen(port, async () => {
 
   console.log(`🟢 Server is running on http://localhost:${port}`);
   console.log(`🔌 Socket.io server is ready for real-time chat`);
-  console.log('🎥 Video Call system initialized');
 });

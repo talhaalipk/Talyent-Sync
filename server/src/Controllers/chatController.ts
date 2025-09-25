@@ -3,7 +3,7 @@ import { Message } from '../Models/message';
 import { User } from '../Models/user';
 import { Notification } from '../Models/notification';
 import mongoose from 'mongoose';
-import { AuthRequest } from '../Middleware/auth'; 
+import { AuthRequest } from '../Middleware/auth';
 import { uploadDocument } from '../config/cloudinary';
 
 // Get all chat conversations for current user
@@ -158,7 +158,7 @@ export const getChatMessages = async (req: AuthRequest, res: Response) => {
 
     res.status(200).json({
       success: true,
-      messages: messages.reverse(), 
+      messages: messages.reverse(),
       pagination: {
         page: Number(page),
         limit: Number(limit),
@@ -378,7 +378,6 @@ export const getUnreadMessageCount = async (
     res.status(500).json({ message: 'Server error' });
   }
 };
-
 
 // Get user profile for chat (for new conversations)
 export const getUserProfile = async (req: AuthRequest, res: Response) => {
