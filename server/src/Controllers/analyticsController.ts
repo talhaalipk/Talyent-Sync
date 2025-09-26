@@ -1,4 +1,3 @@
-// src/Controllers/analyticsController.ts
 import { Response } from 'express';
 import mongoose from 'mongoose';
 import { Contract } from '../Models/Contract';

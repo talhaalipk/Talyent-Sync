@@ -41,7 +41,7 @@ export const registerUser = async (req: Request, res: Response) => {
       email,
       password: hashedPassword,
       role,
-      // isActive will be true by default as per schema
+      // isActive will be true by default
     });
 
     await Wallet.create({

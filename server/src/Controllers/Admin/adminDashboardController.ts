@@ -1,4 +1,3 @@
-// src/Controllers/Admin/adminDashboardController.ts
 import { Response } from 'express';
 import { User } from '../../Models/user';
 import { AdminAuthRequest } from '../../Middleware/Admin/adminAuth';

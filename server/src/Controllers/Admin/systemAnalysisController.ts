@@ -1,4 +1,3 @@
-// src/Controllers/Admin/systemAnalysisController.ts
 import { Response } from 'express';
 import { User } from '../../Models/user';
 import { Job } from '../../Models/job';

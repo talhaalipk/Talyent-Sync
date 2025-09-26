@@ -55,7 +55,7 @@ class NotificationService {
     }
   }
 
-  // Bulk send notifications (useful for broadcasting)
+  // Bulk send notifications
   async sendBulkNotifications(notifications: NotificationData[]) {
     const results = [];
 

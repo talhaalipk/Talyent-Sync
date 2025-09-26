@@ -1,4 +1,3 @@
-// src/Controllers/contractController.ts
 import { Request, Response } from 'express';
 import mongoose from 'mongoose';
 import { Contract, IContract } from '../Models/Contract';
