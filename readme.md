@@ -30,7 +30,7 @@ Backend is powered by **Node.js + Express + TypeScript + MongoDB**.
 - **Freelancer Profiles**: skills, portfolio, success rate
 - **Jobs & Proposals**: fixed/hourly contracts, milestones, negotiations
 - **Escrow Simulation**: safe fund holding, balance management
-- **Real-time Chat**: 1-to-1 & group chat, file sharing
+- **Real-time Chat**: 1-to-1 between Client & Freelancer, file sharing
 - **Video Calls**: WebRTC-based calls + screen sharing
 - **Ratings & Reviews**: client & freelancer feedback
 - **Notifications**: real-time + email alerts
