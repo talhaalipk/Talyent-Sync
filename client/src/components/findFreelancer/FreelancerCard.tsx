@@ -1,7 +1,9 @@
+import { useNavigate } from "react-router-dom";
 import type { Freelancer } from "../../store/useFreelancerStore";
 import { Star, Award, Calendar } from "lucide-react";
 
 export default function FreelancerCard({ freelancer }: { freelancer: Freelancer }) {
+  const navigate = useNavigate();
   return (
     <div className="bg-white p-6 rounded-2xl  shadow-md hover:shadow-md transition-all duration-300 flex flex-col justify-between">
       {/* Header */}
@@ -64,7 +66,10 @@ export default function FreelancerCard({ freelancer }: { freelancer: Freelancer 
       </div>
 
       {/* CTA */}
-      <button className="mt-auto bg-[#2E90EB] text-white text-sm font-medium py-2 px-4 rounded-xl hover:bg-[#1e6fc4] transition">
+      <button
+        className="mt-auto bg-[#2E90EB] text-white text-sm font-medium py-2 px-4 rounded-xl hover:bg-[#1e6fc4] transition"
+        onClick={() => navigate(`/freelancer/${freelancer._id}`)}
+      >
         View Profile
       </button>
     </div>

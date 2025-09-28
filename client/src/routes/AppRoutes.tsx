@@ -1,4 +1,3 @@
-import React from "react";
 import { Routes, Route } from "react-router-dom";
 import { lazy } from "react";
 
@@ -24,6 +23,9 @@ const AdminLogin = lazy(() => import("../pages/Admin/AdminLogin"));
 const AdminSignup = lazy(() => import("../pages/Admin/AdminSignup"));
 const NotificationPage = lazy(() => import("../pages/Notifications"));
 const AdminDashboard = lazy(() => import("../pages/Admin/AdminDashboard"));
+const PublicFreelancerProfile = lazy(() => import("../pages/PublicFreelancerProfile"));
+// Add this to your App.tsx or routing file
+// import PublicFreelancerProfile from '../pages/PublicFreelancerProfile';
 
 export default function AppRoutes() {
   return (
@@ -37,6 +39,7 @@ export default function AppRoutes() {
       <Route path="/jobs" element={<FindJobs />} />
       <Route path="/jobs/:id" element={<SingleJobDetails />} />
       <Route path="/freelancers" element={<FindFreelancer />} />
+      <Route path="/freelancer/:id" element={<PublicFreelancerProfile />} />
       <Route path="/wallet" element={<Wallet />} />
       <Route path="/chat" element={<ChatPage />} />
       <Route path="/chat/:receiverId" element={<ChatPage />} />

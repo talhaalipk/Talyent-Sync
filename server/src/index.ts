@@ -24,6 +24,7 @@ import reviewRouter from './Routes/review';
 import analyticsRouter from './Routes/analytics';
 import adminAuthRouter from './Routes/Admin/adminAuth';
 import adminDashboardRouter from './Routes/Admin/adminDashboard';
+import publicFreelancerRoutes from './Routes/publicFreelancer';
 
 // Sockets
 import ChatSocketHandler from './sockets/chatSocket';
@@ -86,6 +87,7 @@ app.use('/api/reviews', reviewRouter);
 app.use('/api/analytics', analyticsRouter);
 app.use('/api/admin/auth', adminAuthRouter);
 app.use('/api/admin/dashboard', adminDashboardRouter);
+app.use('/api/public/freelancer', publicFreelancerRoutes);
 
 // Start server
 server.listen(port, async () => {
