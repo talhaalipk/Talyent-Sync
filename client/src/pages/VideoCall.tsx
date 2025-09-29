@@ -95,14 +95,6 @@ const VideoCall = () => {
   // Handle call ended event
   useEffect(() => {
     // Listen for call ended and cleanup, but don't navigate immediately
-    const handleCallEnded = () => {
-      console.log("☎️ Call ended event received");
-      setCallStatus("ended");
-      // Wait a bit before navigating to show end call message
-      setTimeout(() => {
-        navigate("/chat");
-      }, 2000);
-    };
 
     // You can add call ended listener here if needed
     // This depends on how your store handles call end events
