@@ -5,21 +5,47 @@ import { IJob } from '../Models/job';
 import { IProposal } from '../Models/proposal';
 
 const transporter = nodemailer.createTransport({
-  service: 'gmail',
+  host: 'smtp.gmail.com',
+  port: 587,
+  secure: false,
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
   },
+  // Add timeout configurations
+  connectionTimeout: 60000, // 60 seconds
+  greetingTimeout: 30000,   // 30 seconds
+  socketTimeout: 60000,     // 60 seconds
 });
 
-export const sendEmail = async (to: string, subject: string, html: string) => {
-  await transporter.sendMail({
-    from: process.env.EMAIL_USER,
-    to,
-    subject,
-    html,
-  });
+// Helper function with retry logic
+const sendEmailWithRetry = async (to: string, subject: string, html: string, retries = 3) => {
+  for (let i = 0; i < retries; i++) {
+    try {
+      await transporter.sendMail({
+        from: process.env.EMAIL_USER,
+        to,
+        subject,
+        html,
+      });
+      console.log(`✅ Email sent successfully to ${to}`);
+      return; // Success, exit retry loop
+    } catch (error: any) {
+      console.log(`❌ Email attempt ${i + 1} failed for ${to}:`, error.message);
+      
+      if (i === retries - 1) {
+        // Last attempt failed, log but don't throw to prevent breaking the main process
+        console.error(`❌ Final email attempt failed for ${to}:`, error);
+        return; // Don't throw error to prevent breaking deposit/main functionality
+      }
+      
+      // Wait before retry
+      await new Promise(resolve => setTimeout(resolve, 2000 * (i + 1))); // Exponential backoff
+    }
+  }
 };
+
+export const sendEmail = sendEmailWithRetry;
 
 // 📩 Existing function: when freelancer sends proposal
 export const sendProposalNotificationEmail = async (
@@ -29,22 +55,23 @@ export const sendProposalNotificationEmail = async (
   proposal: IProposal
 ) => {
   try {
-    const mailOptions = {
-      from: process.env.EMAIL_USER,
-      to: client.email,
-      subject: `New Proposal Received for "${job.title}"`,
-      html: `
-        <h2>New Proposal Received!</h2>
-        <p><strong>Job:</strong> ${job.title}</p>
-        <p><strong>From:</strong> ${freelancer.name || freelancer.UserName}</p>
-        <p><strong>Description:</strong> ${proposal.proposalDesc}</p>
-      `,
-    };
+    const html = `
+      <h2>New Proposal Received!</h2>
+      <p><strong>Job:</strong> ${job.title}</p>
+      <p><strong>From:</strong> ${freelancer.name || freelancer.UserName}</p>
+      <p><strong>Description:</strong> ${proposal.proposalDesc}</p>
+    `;
 
-    await transporter.sendMail(mailOptions);
+    await sendEmailWithRetry(
+      client.email,
+      `New Proposal Received for "${job.title}"`,
+      html
+    );
+    
     console.log(`📧 Proposal notification email sent to ${client.email}`);
   } catch (error) {
     console.error('❌ Error sending proposal notification email:', error);
+    // Don't throw error to prevent breaking the main functionality
   }
 };
 
@@ -55,25 +82,26 @@ export const sendProposalStatusEmail = async (
   status: 'accepted' | 'rejected'
 ) => {
   try {
-    const mailOptions = {
-      from: process.env.EMAIL_USER,
-      to: freelancer.email,
-      subject: `Your Proposal has been ${status}`,
-      html: `
-        <h2>Your Proposal has been ${status}!</h2>
-        <p><strong>Job:</strong> ${job.title}</p>
-        <p>The client has <strong>${status}</strong> your proposal.</p>
-        <a href="${process.env.FRONTEND_URL}/proposals"
-           style="background-color:#007bff;color:white;padding:10px 20px;
-                  text-decoration:none;border-radius:5px;">
-          View Proposal
-        </a>
-      `,
-    };
+    const html = `
+      <h2>Your Proposal has been ${status}!</h2>
+      <p><strong>Job:</strong> ${job.title}</p>
+      <p>The client has <strong>${status}</strong> your proposal.</p>
+      <a href="${process.env.FRONTEND_URL}/proposals"
+         style="background-color:#007bff;color:white;padding:10px 20px;
+                text-decoration:none;border-radius:5px;">
+        View Proposal
+      </a>
+    `;
 
-    await transporter.sendMail(mailOptions);
+    await sendEmailWithRetry(
+      freelancer.email,
+      `Your Proposal has been ${status}`,
+      html
+    );
+
     console.log(`📧 Proposal ${status} email sent to ${freelancer.email}`);
   } catch (error) {
     console.error('❌ Error sending proposal status email:', error);
+    // Don't throw error to prevent breaking the main functionality
   }
 };
