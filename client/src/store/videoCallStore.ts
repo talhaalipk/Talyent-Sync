@@ -96,7 +96,7 @@ export const useVideoCallStore = create<VideoCallStore>((set, get) => ({
       return;
     }
 
-    const socketUrl = `${import.meta.env.VITE_BACKED_BASE_URL_SOCKET}/videocall`;
+    const socketUrl = `${import.meta.env.VITE_BACKED_BASE_URL_SOCKET}videocall`;
     console.log("socketUrl : " , socketUrl);
     const socket = io(socketUrl, {
       withCredentials: true, // This ensures cookies are sent with the request
