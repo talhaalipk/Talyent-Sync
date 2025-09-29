@@ -428,7 +428,7 @@ export const updateJob = async (req: AuthRequest, res: Response) => {
     // Handle publishing
     if (
       updateData.status === 'published' &&
-      existingJob.status !== 'published'
+      existingJob?.status !== 'published'
     ) {
       updateData.publishedAt = new Date();
     }
