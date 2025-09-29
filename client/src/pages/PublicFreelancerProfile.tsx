@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import { usePublicFreelancerStore } from "../store/usePublicFreelancerStore";
 
-// Import all the component sections
 import FreelancerHeader from "../components/freelancer/FreelancerHeader";
 import AboutSection from "../components/freelancer/AboutSection";
 import SkillsSection from "../components/freelancer/SkillsSection";

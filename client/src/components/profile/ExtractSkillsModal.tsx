@@ -78,8 +78,27 @@ export default function ExtractSkillsModal({ onClose }: Props) {
 
   // DOCX text extraction helper
   const extractDocxText = async (arrayBuffer: ArrayBuffer): Promise<string> => {
-    const zip = await docx.renderAsync(arrayBuffer); // renderAsync returns text/html
-    return zip.textContent || "Unable to extract text from docx";
+    // Create a temporary container for docx-preview
+    const tempContainer = document.createElement('div');
+    tempContainer.style.display = 'none';
+    document.body.appendChild(tempContainer);
+    
+    try {
+      // renderAsync needs arrayBuffer and a container element
+      await docx.renderAsync(arrayBuffer, tempContainer);
+      const text = tempContainer.textContent || tempContainer.innerText || "Unable to extract text from docx";
+      
+      // Clean up the temporary container
+      document.body.removeChild(tempContainer);
+      
+      return text;
+    } catch (error) {
+      // Clean up on error
+      if (document.body.contains(tempContainer)) {
+        document.body.removeChild(tempContainer);
+      }
+      return "Unable to extract text from docx";
+    }
   };
 
   // handle upload
@@ -155,7 +174,7 @@ export default function ExtractSkillsModal({ onClose }: Props) {
                   key={i}
                   className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm"
                 >
-                  {s} ,
+                  {s}
                 </span>
               ))}
             </div>
