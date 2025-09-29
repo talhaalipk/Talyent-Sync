@@ -43,8 +43,19 @@ const app = express();
 const server = createServer(app);
 const port = process.env.PORT || 3000;
 
+const allowedOrigins: string[] = [
+  process.env.FRONTEND_URL,
+  process.env.FRONTEND_URL_2,
+].filter((origin): origin is string => Boolean(origin));
+
 const corsOptions = {
-  origin: ['http://localhost:5173', 'http://localhost:5174'],
+  origin: (origin: any, callback: any) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization', 'Cookie'],
@@ -58,11 +69,12 @@ app.use(cookieParser());
 // NEW: Socket.io setup
 const io = new Server(server, {
   cors: {
-    origin: ['http://localhost:5173', 'http://localhost:5174'],
+    origin: allowedOrigins,
     methods: ['GET', 'POST'],
     credentials: true,
   },
 });
+
 new ChatSocketHandler(io);
 notificationService.initialize(io);
 initializeNotificationSocket(io);
