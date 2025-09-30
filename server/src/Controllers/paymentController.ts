@@ -75,16 +75,16 @@ export const deposit = async (req: Request, res: Response) => {
     });
 
     // ✅ Send email to user about deposit initiation
-    // const user = await User.findById(userId).select('email name');
-    // if (user) {
-    //   await sendEmail(
-    //     user.email,
-    //     'Deposit Initiated',
-    //     `<p>Hello ${user.name || 'User'},</p>
-    //              <p>You initiated a deposit of <strong>$${amount}</strong>.</p>
-    //              <p>Please complete the payment through Stripe checkout.</p>`
-    //   );
-    // }
+    const user = await User.findById(userId).select('email name');
+    if (user) {
+      await sendEmail(
+        user.email,
+        'Deposit Initiated',
+        `<p>Hello ${user.name || 'User'},</p>
+                 <p>You initiated a deposit of <strong>$${amount}</strong>.</p>
+                 <p>Please complete the payment through Stripe checkout.</p>`
+      );
+    }
 
     console.log(session.url);
     return res.json({ url: session.url });
