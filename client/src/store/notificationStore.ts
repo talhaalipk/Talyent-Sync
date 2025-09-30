@@ -99,7 +99,8 @@ export const useNotificationStore = create<NotificationStore>()(
         const socketUrl = import.meta.env.VITE_BACKED_BASE_URL_SOCKET || "http://localhost:5000";
 
         // Create new socket connection to notification namespace
-        const newSocket = io(`${socketUrl}/notifications`, {
+        console.log(`${socketUrl}notifications`);
+        const newSocket = io(`${socketUrl}notifications`, {
           withCredentials: true,
           autoConnect: true,
         });
