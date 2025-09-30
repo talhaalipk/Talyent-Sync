@@ -42,11 +42,11 @@ export default function NotificationDropdown() {
 
   // Periodically update unread count
   useEffect(() => {
-    const interval = setInterval(() => {
+    // const interval = setInterval(() => {
       getUnreadCount();
-    }, 30000); // Check every 30 seconds
+    // }, 40 * 1000); // Check every 30 seconds
 
-    return () => clearInterval(interval);
+    // return () => clearInterval(interval);
   }, [getUnreadCount]);
 
   // Handle notification click
