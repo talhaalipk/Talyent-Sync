@@ -15,7 +15,7 @@ const transporter = nodemailer.createTransport({
   pool: true, // ✅ Reuse connections
   maxConnections: 5,
   maxMessages: 100,
-  connectionTimeout: 10000, // 10 seconds (reduced)
+  connectionTimeout: 120000, // 10 seconds (reduced)
   greetingTimeout: 10000,
   socketTimeout: 10000,
   // ✅ Disable TLS verification if needed (only for development)
