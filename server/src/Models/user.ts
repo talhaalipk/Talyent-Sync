@@ -122,7 +122,7 @@ const UserSchema = new Schema<IUser>(
           year: Number,
         },
       ],
-      successRate: { type: Number, default: 5 },
+      successRate: { type: Number, default: 100 },
       ratingAvg: { type: Number, default: 5 },
       ratingCount: { type: Number, default: 0 },
       reviews: [
