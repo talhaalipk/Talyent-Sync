@@ -25,7 +25,7 @@ export const extractSkillsFromCVText = async (
       Return the response in the following JSON format:
       
       {
-        "skills": ["skill1", "skill2", "skill3", ...],
+        "skills": ["skill1,", "skill2,", "skill3,", ...],
         "experience": "brief summary of years of experience",
         "categories": {
           "technical": ["programming languages", "frameworks", "databases", ...],
