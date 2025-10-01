@@ -174,7 +174,7 @@ export default function ExtractSkillsModal({ onClose }: Props) {
                   key={i}
                   className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm"
                 >
-                  {s}
+                  {s}{i < skills.length - 1 ? "," : ""}
                 </span>
               ))}
             </div>
